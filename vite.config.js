@@ -1,0 +1,32 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          [
+            '@locator/babel-jsx/dist',
+            {
+              env: 'development',
+            },
+          ],
+        ],
+      },
+    }),
+    tailwindcss(),
+  ],
+  server: {
+    port: 5100,
+    open: true,
+  },
+  test: {
+    globals: true,
+  },
+  optimizeDeps: {
+    entries: ['src/**/*.{js,jsx,ts,tsx}', 'index.html'],
+  },
+});

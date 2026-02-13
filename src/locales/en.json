@@ -1,0 +1,148 @@
+{
+  "app": {
+    "title": "Vote Counting System"
+  },
+  "home": {
+    "welcome": "Welcome to the Vote Counting System",
+    "description": "A simple and efficient tool to manage the electoral vote counting process. Follow the steps to load voters, configure the counting, register ballots, and obtain results.",
+    "startButton": "Start Counting",
+    "processTitle": "Counting Process",
+    "features": {
+      "step1Title": "Data Import",
+      "step1Description": "Easily import the voter list from an Excel file",
+      "step2Title": "Configuration",
+      "step2Description": "Define delegates, scrutineers, and process parameters",
+      "step3Title": "Vote Registration",
+      "step3Description": "Register each ballot quickly and accurately"
+    },
+    "steps": {
+      "step1Title": "Load Voter List",
+      "step1Description": "Import the voter list from an Excel file with the required fields",
+      "step2Title": "Configure Counting",
+      "step2Description": "Define the number of delegates, scrutineers, and other necessary parameters",
+      "step3Title": "Register Ballots",
+      "step3Description": "Register each ballot by selecting the corresponding votes",
+      "step4Title": "View Results",
+      "step4Description": "View final results and generate PDF reports"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Sorry, the page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "navigation": {
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "home": "Home",
+    "step1": "Step 1",
+    "step2": "Step 2",
+    "step3": "Step 3",
+    "step4": "Step 4",
+    "openMenu": "Open main menu",
+    "closeMenu": "Close main menu",
+    "changeTheme": "Change theme to",
+    "selectTheme": "Select theme",
+    "light": "light",
+    "dark": "dark",
+    "changeLanguageTo": "Change language to",
+    "currentLanguage": "Current language",
+    "openLanguageMenu": "Open language menu",
+    "flag": "flag",
+    "english": "English",
+    "spanish": "Spanish",
+    "errorChangingLanguage": "Error changing language"
+  },
+  "step1": {
+    "title": "Step 1: Load Voter List",
+    "upload": "Upload Excel file",
+    "download": "Download example",
+    "uploadSuccess": "List uploaded successfully",
+    "totalPeople": "Total people in the list",
+    "columns": {
+      "name": "1 - Name",
+      "lastName1": "2 - First Last Name",
+      "lastName2": "3 - Second Last Name",
+      "location": "4 - Location",
+      "required": "Required columns in this order:"
+    },
+    "errors": {
+      "invalidFile": "Please select a valid Excel file (.xlsx or .xls)",
+      "processing": "Error processing the file",
+      "passwordProtected": "This file is password protected and cannot be processed directly."
+    },
+    "haveList": "There is already a processed list",
+    "passwordInstructions": "To process this file, you must first unprotect it. Follow these steps:",
+    "file-password-step1": "Open the Excel file in Microsoft Excel or LibreOffice.",
+    "file-password-step2": "Go to File→Info→Protect Workbook",
+    "file-password-step3": "Select “Encrypt with password”.",
+    "file-password-step4": "Remove the password (leave the field blank) and save the file.",
+    "file-password-step5": "Upload the unprotected file again.",
+    "tryAgain": "Understood, try again"
+  },
+  "step2": {
+    "title": "Step 2: Vote Counting Configuration",
+    "form": {
+      "delegates": "Number of delegates",
+      "areaName": "Delegate name",
+      "votes": "Number of votes/ballot",
+      "scrutineers": "Number of scrutineers",
+      "scrutineersNames": "Names of scrutineers",
+      "delegateAreas": "Delegate names",
+      "scrutineerName": "Name of the scrutineer"
+    },
+    "errors": {
+      "required": "This field is required",
+      "min": "Value must be greater than 0"
+    }
+  },
+  "step3": {
+    "title": "Step 3: Ballot Registration",
+    "ballot": "Ballot",
+    "vote": "Vote",
+    "nullVote": "Null vote",
+    "invalidName": "Invalid name",
+    "searchPerson": "Search person...",
+    "nextBallot": "Next ballot",
+    "previousBallot": "Previous ballot",
+    "nullBallot": "Null ballot",
+    "nullBallotReasons": "Null ballot for one of these reasons:",
+    "reasons": {
+      "repeated": "Some repeated name",
+      "less": "If the ballot has fewer names",
+      "more": "If the ballot has any repeated or extra names"
+    },
+    "confirm": "Confirm",
+    "confirmBallot": "Confirm ballot?",
+    "ballotSaved": "Ballot saved successfully",
+    "editMode": "Editing ballot",
+    "cancel": "Cancel"
+  },
+  "step4": {
+    "title": "Step 4: Vote Counting Results",
+    "statistics": {
+      "totalVoters": "Total number of voters in list",
+      "totalBallots": "Total number of ballots",
+      "nullBallots": "Null ballots",
+      "validBallots": "Valid ballots",
+      "invalidNames": "Invalid names",
+      "totalPossibleVotes": "Total possible votes",
+      "validVotes": "Valid votes"
+    },
+    "results": "Results",
+    "name": "Name",
+    "votes": "Votes",
+    "downloadPDF": "Download PDF",
+    "backToVoting": "Continue adding ballots"
+  },
+  "modals": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "accept": "Accept"
+  },
+  "language": {
+    "spanish": "Español",
+    "english": "English"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "step1": {
+    "columns": {
+      "lastName1": "2 - Primer Apellido",
+      "lastName2": "3 - Segundo Apellido",
+      "location": "4 - Localidad de residencia",
+      "name": "1 - Nombre",
+      "required": "Columnas requeridas en el orden indicado:"
+    },
+    "download": "Descargar ejemplo",
+    "errors": {
+      "invalidFile": "Seleccione un archivo Excel válido (.xlsx o .xls)",
+      "processing": "Error al procesar el archivo",
+      "passwordProtected": "Este archivo está protegido con contraseña y no puede ser procesado directamente."
+    },
+    "title": "Paso 1: cargar la lista de votantes",
+    "totalPeople": "Total de personas en la lista",
+    "upload": "Subir archivo excel",
+    "uploadSuccess": "Lista cargada exitosamente",
+    "haveList": "Ya hay una lista procesada",
+    "passwordInstructions": "Para poder procesar este archivo, necesitas desprotegerlo primero. Sigue estos pasos:",
+    "file-password-step1": "Abre el archivo Excel en Microsoft Excel o LibreOffice.",
+    "file-password-step2": "Ve a Archivo→Información→Proteger libro",
+    "file-password-step3": "Selecciona \"Cifrar con contraseña\".",
+    "file-password-step4": "Elimina la contraseña (deja el campo vacío) y guarda el archivo.",
+    "file-password-step5": "Vuelve a subir el archivo desprotegido.",
+    "tryAgain": "Entendido, intentar de nuevo"
+  },
+  "app": {
+    "title": "Sistema de conteo de votos"
+  },
+  "home": {
+    "description": "Una herramienta sencilla y eficaz para gestionar el proceso de recuento de votos electorales. \nSigue los pasos para cargar votantes, configurar el conteo, registrar boletas y obtener resultados.",
+    "features": {
+      "step1Description": "Importe fácilmente la lista de votantes desde un archivo de Excel",
+      "step1Title": "Importación de datos",
+      "step2Description": "Definir delegados, escrutadores y parámetros de proceso.",
+      "step2Title": "Configuración",
+      "step3Description": "Registre cada boleta de forma rápida y precisa",
+      "step3Title": "Registro de Voto"
+    },
+    "processTitle": "Proceso de conteo",
+    "startButton": "Empezar a contar",
+    "steps": {
+      "step1Description": "Importe la lista de votantes desde un archivo Excel con los campos requeridos",
+      "step1Title": "Cargar lista de votantes",
+      "step2Description": "Definir el número de delegados, escrutadores y otros parámetros necesarios.",
+      "step2Title": "Configurar el conteo",
+      "step3Description": "Registra cada boleta seleccionando los votos correspondientes",
+      "step3Title": "Registrar boletas",
+      "step4Description": "Ver resultados finales y generar informes en PDF",
+      "step4Title": "Ver resultados"
+    },
+    "welcome": "Bienvenido al Sistema de Conteo de Votos"
+  },
+  "language": {
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "modals": {
+    "accept": "Aceptar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "navigation": {
+    "back": "Atrás",
+    "changeLanguageTo": "Cambiar idioma a",
+    "changeTheme": "Cambiar tema a",
+    "closeMenu": "Cerrar menú principal",
+    "currentLanguage": "Idioma actual",
+    "dark": "oscuro",
+    "english": "Inglés",
+    "errorChangingLanguage": "Error al cambiar el idioma",
+    "finish": "Finalizar",
+    "flag": "bandera",
+    "home": "Hogar",
+    "light": "luz",
+    "next": "Siguiente",
+    "openLanguageMenu": "Abrir menú de idioma",
+    "openMenu": "Abrir menú principal",
+    "selectTheme": "Seleccionar tema",
+    "spanish": "Español",
+    "step1": "Paso 1",
+    "step2": "Paso 2",
+    "step3": "Paso 3",
+    "step4": "Paso 4"
+  },
+  "notFound": {
+    "backHome": "De vuelta a casa",
+    "description": "Lo sentimos, la página que estás buscando no existe o ha sido movida.",
+    "title": "Página no encontrada"
+  },
+  "step2": {
+    "errors": {
+      "min": "El valor debe ser mayor que 0.",
+      "required": "Este campo es obligatorio"
+    },
+    "form": {
+      "areaName": "Nombre delegado",
+      "delegates": "Número de delegados",
+      "scrutineers": "Número de escrutadores",
+      "scrutineersNames": "Nombres de los escrutadores",
+      "votes": "Número de votos/papeleta",
+      "delegateAreas": "Nombres de delegados",
+      "scrutineerName": "Nombre del escrutador"
+    },
+    "title": "Paso 2: Configuración del conteo de votos"
+  },
+  "step3": {
+    "ballot": "Papeleta",
+    "ballotSaved": "Boleta guardada exitosamente",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "confirmBallot": "¿Confirmar boleta?",
+    "editMode": "Editando papeleta",
+    "invalidName": "Nombre no válido",
+    "nextBallot": "Próxima votación",
+    "nullBallot": "Voto nulo",
+    "nullBallotReasons": "Voto nulo por alguna de estas razones:",
+    "nullVote": "Voto nulo",
+    "previousBallot": "Votación anterior",
+    "reasons": {
+      "less": "Si la boleta tiene menos nombres",
+      "more": "Si la boleta tiene nombres repetidos o adicionales",
+      "repeated": "Algún nombre repetido"
+    },
+    "searchPerson": "Buscar persona...",
+    "title": "Paso 3: Registro de boleta",
+    "vote": "Voto"
+  },
+  "step4": {
+    "backToVoting": "Continuar agregando boletas",
+    "downloadPDF": "Descargar PDF",
+    "name": "Nombre",
+    "results": "Resultados",
+    "statistics": {
+      "invalidNames": "Nombres no válidos",
+      "nullBallots": "Boletas nulas",
+      "totalBallots": "Número total de papeletas",
+      "totalPossibleVotes": "Total de votos posibles",
+      "totalVoters": "Número total de votantes en la lista",
+      "validBallots": "Boletas válidas",
+      "validVotes": "Votos válidos"
+    },
+    "title": "Paso 4: Resultados del recuento de votos",
+    "votes": "Votos"
+  }
+}

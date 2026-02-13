@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+
+/* Configurar dark mode para Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Configuración de dark mode para Tailwind v4 */
+  --color-lightPrimary: #cff6f8;
+  --color-primary: #96dce0;
+  --color-textPrimary: #4bbdc2;
+  --color-darkPrimary: #4b8ea1;
+  --color-darkGreen: #00793a;
+  --color-lightGreen: #65ac1e;
+  --color-lightBlue: #21a0d2;
+  --color-darkBlue: #004a96;
+  --color-warning: #f39500;
+  --color-alert: #c50022;
+  --color-grayLight: #f9f9f9;
+  --color-grayMedium: #e0e0e0;
+  --color-grayDark: #707070;
+
+  /* Colores adicionales del portafolio */
+  --color-lilaPortfolio: #9c92f8;
+  --color-lilaLightPortfolio: #7c3aed;
+  --color-grayPortfolio: #e5e5e5;
+  --color-grayLightPortfolio: #1f2937;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color, rgb(249 250 251));
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(
+    --scrollbar-thumb-color,
+    linear-gradient(rgb(249 250 251), rgb(75, 142, 161), rgb(249 250 251))
+  );
+  border-radius: 100vw;
+}
+
+/* Dropdown animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
