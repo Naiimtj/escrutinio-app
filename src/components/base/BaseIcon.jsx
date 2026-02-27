@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { iconRegistry } from './icons';
 
 const TooltipWrapper = ({
@@ -11,6 +11,31 @@ const TooltipWrapper = ({
   const [isVisible, setIsVisible] = useState(false);
   const [showTimeout, setShowTimeout] = useState(null);
   const [hideTimeout, setHideTimeout] = useState(null);
+  const [coords, setCoords] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+  });
+  const wrapperRef = useRef(null);
+
+  const updatePosition = () => {
+    if (wrapperRef.current) {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isVisible) {
+      updatePosition();
+    }
+  }, [isVisible]);
 
   if (!tooltip) {
     return children;
@@ -22,6 +47,7 @@ const TooltipWrapper = ({
       setHideTimeout(null);
     }
 
+    updatePosition();
     const timeout = setTimeout(() => {
       setIsVisible(true);
     }, showDelay);
@@ -40,38 +66,79 @@ const TooltipWrapper = ({
     setHideTimeout(timeout);
   };
 
-  const positionClasses = {
-    top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
-    bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
-    left: 'right-full top-1/2 -translate-y-1/2 mr-2',
-    right: 'left-full top-1/2 -translate-y-1/2 ml-2',
+  const getTooltipPosition = () => {
+    const gap = 8; // 8px gap
+    const positions = {
+      top: {
+        top: coords.top - gap,
+        left: coords.left + coords.width / 2,
+        transform: 'translate(-50%, -100%)',
+      },
+      bottom: {
+        top: coords.top + coords.height + gap,
+        left: coords.left + coords.width / 2,
+        transform: 'translateX(-50%)',
+      },
+      down: {
+        top: coords.top + coords.height + gap,
+        left: coords.left + coords.width / 2,
+        transform: 'translateX(-50%)',
+      },
+      left: {
+        top: coords.top + coords.height / 2,
+        left: coords.left - gap,
+        transform: 'translate(-100%, -50%)',
+      },
+      right: {
+        top: coords.top + coords.height / 2,
+        left: coords.left + coords.width + gap,
+        transform: 'translateY(-50%)',
+      },
+      topleft: {
+        top: coords.top - gap,
+        left: coords.left + coords.width,
+        transform: 'translate(-100%, -100%)',
+      },
+      topright: {
+        top: coords.top - gap,
+        left: coords.left,
+        transform: 'translateY(-100%)',
+      },
+      downleft: {
+        top: coords.top + coords.height + gap,
+        left: coords.left + coords.width,
+        transform: 'translateX(-100%)',
+      },
+      downright: {
+        top: coords.top + coords.height + gap,
+        left: coords.left,
+        transform: 'none',
+      },
+    };
+    return positions[position] || positions.top;
   };
 
-  const arrowClasses = {
-    top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-gray-900',
-    bottom:
-      'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-gray-900',
-    left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-gray-900',
-    right:
-      'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-gray-900',
-  };
+  const tooltipStyle = isVisible ? getTooltipPosition() : {};
 
   return (
-    <div className="relative inline-block">
-      <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <>
+      <div
+        ref={wrapperRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="inline-block"
+      >
         {children}
       </div>
       {isVisible && (
         <div
-          className={`absolute z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-md shadow-lg whitespace-nowrap pointer-events-none ${positionClasses[position]}`}
+          className="fixed z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-md shadow-lg whitespace-nowrap pointer-events-none"
+          style={tooltipStyle}
         >
           {tooltip}
-          <div
-            className={`absolute w-0 h-0 border-4 ${arrowClasses[position]}`}
-          />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
@@ -81,6 +148,7 @@ const BaseIcon = ({
   color = '#000',
   className = '',
   onClick,
+  isClicked = false,
   tooltip,
   tooltipPosition = 'top',
   tooltipShowDelay = 100,
@@ -88,12 +156,13 @@ const BaseIcon = ({
   ...props
 }) => {
   const IconComponent = iconRegistry[icon];
+  const cursorClass = isClicked ? 'cursor-pointer' : '';
 
   const iconElement = IconComponent ? (
     <IconComponent
       size={size}
       color={color}
-      className={`${className} cursor-pointer`}
+      className={`${className} ${cursorClass}`}
       onClick={onClick}
       {...props}
     />
@@ -110,8 +179,8 @@ const BaseIcon = ({
 
       return (
         <i
-          className={`${icon} ${sizeClasses[size]} ${className}`}
-          style={{ color, cursor: 'pointer' }}
+          className={`${icon} ${sizeClasses[size]} ${className} ${cursorClass}`}
+          style={{ color }}
           onClick={onClick}
           {...props}
         />

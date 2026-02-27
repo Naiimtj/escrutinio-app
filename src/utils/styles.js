@@ -14,7 +14,7 @@ export const buttonStyles = {
 
 // Common input styles
 export const inputStyles =
-  'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent';
+  'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent';
 
 // Modal wrapper styles
 export const modalOverlay =

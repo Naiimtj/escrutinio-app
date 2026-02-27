@@ -1,51 +1,23 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ExcelJS from 'exceljs';
 import {
-  getFromLocalStorage,
-  saveToLocalStorage,
-  STORAGE_KEYS,
-} from '../utils/localStorage';
+  createVoterList,
+  voterListExists,
+  backupExists,
+  restoreLastBackup,
+  clearBackup,
+  configurationExists,
+  deleteConfiguration,
+  deleteAllBallots,
+  ballotsExist,
+} from '../service';
 import {
-  isValidExcelFile,
-  processVoterRow,
-  isValidVoter,
-} from '../utils/helpers';
-import { buttonStyles } from '../utils/styles';
-import { BaseButton, BaseIcon } from './base';
-
-const DEMO_DATA = [
-  {
-    Nombre: 'Juan',
-    'Primer apellido': 'García',
-    'Segundo apellido': 'López',
-    'Localidad de residencia': 'Madrid',
-  },
-  {
-    Nombre: 'María',
-    'Primer apellido': 'Rodríguez',
-    'Segundo apellido': 'Martínez',
-    'Localidad de residencia': 'Barcelona',
-  },
-  {
-    Nombre: 'Pedro',
-    'Primer apellido': 'Sánchez',
-    'Segundo apellido': 'Fernández',
-    'Localidad de residencia': 'Valencia',
-  },
-  {
-    Nombre: 'Ana',
-    'Primer apellido': 'Martín',
-    'Segundo apellido': 'Pérez',
-    'Localidad de residencia': 'Sevilla',
-  },
-  {
-    Nombre: 'Luis',
-    'Primer apellido': 'González',
-    'Segundo apellido': 'Ruiz',
-    'Localidad de residencia': 'Zaragoza',
-  },
-];
+  generateDemoVoterFile,
+  parseVotersExcelFile,
+} from '../utils/step1Excel';
+import { BaseButton, BaseIcon, BaseModal, BaseDropFile } from './base';
+import Confirmation from './modals/Confirmation';
+import MultipleFilesModal from './modals/MultipleFilesModal';
 
 const Step1 = ({ onNext }) => {
   const { t } = useTranslation();
@@ -55,91 +27,76 @@ const Step1 = ({ onNext }) => {
   const [error, setError] = useState('');
   const [showPasswordInstructions, setShowPasswordInstructions] =
     useState(false);
+  const [showNoBackupModal, setShowNoBackupModal] = useState(false);
+  const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+  const [showOldDataModal, setShowOldDataModal] = useState(false);
+  const [showMultipleFilesModal, setShowMultipleFilesModal] = useState(false);
+  const [multipleFiles, setMultipleFiles] = useState([]);
+  const [pendingFile, setPendingFile] = useState(null);
+  const hasBackup = backupExists();
 
-  const generateDemoFile = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Votantes');
-
-    // Add headers
-    worksheet.columns = [
-      { header: 'Nombre', key: 'Nombre', width: 15 },
-      { header: 'Primer apellido', key: 'Primer apellido', width: 15 },
-      { header: 'Segundo apellido', key: 'Segundo apellido', width: 15 },
-      {
-        header: 'Localidad de residencia',
-        key: 'Localidad de residencia',
-        width: 20,
+  const handleGenerateDemoFile = async () => {
+    await generateDemoVoterFile({
+      sheetName: t('step1.demo.sheetName'),
+      fileName: t('step1.demo.fileName'),
+      headers: {
+        name: t('step1.demo.columns.name'),
+        lastName1: t('step1.demo.columns.lastName1'),
+        lastName2: t('step1.demo.columns.lastName2'),
+        location: t('step1.demo.columns.location'),
       },
-    ];
-
-    // Add rows
-    worksheet.addRows(DEMO_DATA);
-
-    // Generate and download
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    const url = globalThis.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'ejemplo_lista_votantes.xlsx';
-    link.click();
-    globalThis.URL.revokeObjectURL(url);
   };
 
-  const processExcelFile = async (file) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const workbook = new ExcelJS.Workbook();
+  const handleFilesAdded = async (addedFiles) => {
+    if (!addedFiles || addedFiles.length === 0) return;
 
-    // Load workbook
-    await workbook.xlsx.load(arrayBuffer);
+    setError('');
 
-    const worksheet = workbook.worksheets[0];
-    const jsonData = [];
-
-    // Validate that the worksheet has at least 4 columns
-    const firstRow = worksheet.getRow(1);
-    const columnCount = firstRow.cellCount;
-
-    if (columnCount < 4) {
-      throw new Error('El archivo debe tener al menos 4 columnas');
-    }
-
-    // Process rows (skip header row)
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; // Skip header row
-
-      // Extract only the first 4 columns
-      const rowData = [
-        row.getCell(1).value || '',
-        row.getCell(2).value || '',
-        row.getCell(3).value || '',
-        row.getCell(4).value || '',
-      ];
-      jsonData.push(rowData);
-    });
-
-    return jsonData
-      .map((row, idx) => processVoterRow(row, idx))
-      .filter(isValidVoter);
-  };
-
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!isValidExcelFile(file)) {
-      setError(t('step1.errors.invalidFile'));
+    // If more than one file was added, let the user pick which one
+    if (addedFiles.length > 1) {
+      setMultipleFiles(addedFiles);
+      setShowMultipleFilesModal(true);
       return;
     }
 
+    const file = addedFiles[0];
+
+    // If existing config or ballots exist, ask user what to do first
+    if (configurationExists() || ballotsExist()) {
+      setPendingFile(file);
+      setShowOldDataModal(true);
+      return;
+    }
+
+    await processFile(file);
+  };
+
+  const handleMultipleFilesConfirm = async (selectedFile) => {
+    setShowMultipleFilesModal(false);
+    setMultipleFiles([]);
+
+    if (configurationExists() || ballotsExist()) {
+      setPendingFile(selectedFile);
+      setShowOldDataModal(true);
+      return;
+    }
+
+    await processFile(selectedFile);
+  };
+
+  const handleMultipleFilesCancel = () => {
+    setShowMultipleFilesModal(false);
+    setMultipleFiles([]);
+  };
+
+  const processFile = async (file) => {
     setUploading(true);
     setError('');
 
     try {
-      const voterList = await processExcelFile(file);
-      saveToLocalStorage(STORAGE_KEYS.VOTER_LIST, voterList);
+      const voterList = await parseVotersExcelFile(file);
+      createVoterList(voterList);
 
       setTotalPeople(voterList.length);
       setUploadSuccess(true);
@@ -147,32 +104,72 @@ const Step1 = ({ onNext }) => {
 
       setTimeout(() => onNext(), 2000);
     } catch (err) {
-      console.error('Error processing file:', err);
-
-      // Check if error is due to password protection
       const errorMessage = err.message || '';
-      if (
+      const isPasswordError =
         errorMessage.includes('central directory') ||
         errorMessage.includes('zip file') ||
         errorMessage.includes('encrypted') ||
-        errorMessage.includes('password')
-      ) {
-        // File is likely password protected
+        errorMessage.includes('password');
+
+      if (isPasswordError) {
         setShowPasswordInstructions(true);
         setError(t('step1.errors.passwordProtected'));
+      } else if (errorMessage === 'STEP1_MIN_COLUMNS') {
+        setError(t('step1.errors.minColumns', { count: 4 }));
       } else {
         setError(t('step1.errors.processing'));
       }
 
       setUploading(false);
-      // Reset file input
-      event.target.value = '';
     }
+  };
+
+  const handleContinueUpload = async () => {
+    const file = pendingFile;
+    setPendingFile(null);
+    setShowOldDataModal(false);
+    await processFile(file);
+  };
+
+  const handleResetAndUpload = async () => {
+    deleteConfiguration();
+    deleteAllBallots();
+    const file = pendingFile;
+    setPendingFile(null);
+    setShowOldDataModal(false);
+    await processFile(file);
+  };
+
+  const handleCancelOldDataModal = () => {
+    setShowOldDataModal(false);
+    setPendingFile(null);
   };
 
   const handleCloseInstructions = () => {
     setShowPasswordInstructions(false);
     setError('');
+  };
+
+  const handleRestoreBackup = () => {
+    if (!backupExists()) {
+      setShowNoBackupModal(true);
+      return;
+    }
+
+    setShowOverwriteModal(true);
+  };
+
+  const confirmRestore = () => {
+    const restored = restoreLastBackup();
+    if (!restored) {
+      setShowOverwriteModal(false);
+      setShowNoBackupModal(true);
+      return;
+    }
+
+    clearBackup();
+    setShowOverwriteModal(false);
+    onNext();
   };
 
   return (
@@ -205,7 +202,7 @@ const Step1 = ({ onNext }) => {
               <span className="font-bold">{totalPeople}</span>
             </p>
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              {t('navigation.next')}...
+              {t('navigation.loading')}...
             </p>
           </div>
         ) : (
@@ -245,7 +242,7 @@ const Step1 = ({ onNext }) => {
                     <BaseButton
                       onClick={handleCloseInstructions}
                       size="md"
-                      variant='secondary'
+                      variant="secondary"
                     >
                       {t('step1.tryAgain')}
                     </BaseButton>
@@ -254,56 +251,167 @@ const Step1 = ({ onNext }) => {
               </div>
             ) : (
               <>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center ">
-                  <input
-                    type="file"
-                    accept=".xlsx,.xls"
-                    onChange={handleFileUpload}
-                    disabled={uploading}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    className={`${buttonStyles.primary} ${uploading ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer'}`}
-                  >
-                    <BaseIcon name="upload" className="w-5 h-5 mr-2" />
-                    {uploading ? `${t('step1.upload')}...` : t('step1.upload')}
-                  </label>
-                  {error && !showPasswordInstructions && (
-                    <div className="mt-4 text-red-600 text-sm">{error}</div>
-                  )}
+                <div className=" flex justify-between items-center p-4 bg-gray-50 border dark:border-grayLight dark:bg-grayMedium rounded-lg">
+                  <div>
+                    <div className="text-sm text-gray-600 mb-2 font-bold">
+                      {t('step1.columns.required')}
+                    </div>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>{t('step1.columns.name')}</li>
+                      <li>{t('step1.columns.lastName1')}</li>
+                      <li>{t('step1.columns.lastName2')}</li>
+                      <li>{t('step1.columns.location')}</li>
+                    </ul>
+                  </div>
+                  <>
+                    <BaseButton onClick={handleGenerateDemoFile} size="small">
+                      {t('step1.download')}
+                    </BaseButton>
+                  </>
                 </div>
-
+                <BaseDropFile
+                  label={
+                    uploading ? `${t('step1.upload')}...` : t('step1.upload')
+                  }
+                  buttonLabel={t('step1.upload')}
+                  labelDragAndDrop={t('step1.dragAndDrop')}
+                  labelFormat={t('step1.columns.required')}
+                  labelLimit={t('step1.fileLimits')}
+                  labelMaxFile={t('step1.maxFile')}
+                  formats={['xlsx', 'xls']}
+                  limitNumberFiles={1}
+                  limitSizeFile="10"
+                  files={[]}
+                  disabled={uploading}
+                  onAddFiles={handleFilesAdded}
+                  onExceedLimit={handleFilesAdded}
+                  onDeleteFile={() => {}}
+                />
+                {error && !showPasswordInstructions && (
+                  <div className="mt-4 text-alert text-sm text-center">
+                    {error}
+                  </div>
+                )}
+                
                 <div className="text-center">
-                  <BaseButton onClick={generateDemoFile} size="small" outlined>
-                    {t('step1.download')}
-                  </BaseButton>
-                </div>
-
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600  mb-2">
-                    {t('step1.columns.required')}
-                  </p>
-                  <ul className="text-xs text-gray-500 space-y-1">
-                    <li>{t('step1.columns.name')}</li>
-                    <li>{t('step1.columns.lastName1')}</li>
-                    <li>{t('step1.columns.lastName2')}</li>
-                    <li>{t('step1.columns.location')}</li>
-                  </ul>
+                  <BaseIcon
+                    name="download"
+                    className="w-4 h-4 text-gray-600 dark:text-gray-300"
+                  />
                 </div>
               </>
             )}
           </div>
         )}
-        {!uploadSuccess && getFromLocalStorage('voterList') && (
+        {!uploadSuccess && (voterListExists() || hasBackup) && (
           <div className="flex flex-col items-center justify-end pt-4 gap-2">
-            <p className="text-white ">{t('step1.haveList')}</p>
-            <BaseButton variant="primary" size="large" onClick={onNext}>
-              {t('navigation.next')}
-            </BaseButton>
+            {voterListExists() && (
+              <>
+                <p className="dark:text-white text-grayDark">
+                  {t('step1.haveList')}
+                </p>
+                <BaseButton variant="primary" size="large" onClick={onNext}>
+                  {t('navigation.next')}
+                </BaseButton>
+              </>
+            )}
+            {hasBackup && (
+              <div className="w-full">
+                <BaseButton
+                  variant="secondary"
+                  icon="restore"
+                  onClick={handleRestoreBackup}
+                >
+                  {t('step1.restore.button')}
+                </BaseButton>
+              </div>
+            )}
           </div>
         )}
+
+        <BaseModal
+          visible={showNoBackupModal}
+          title={t('step1.restore.button')}
+          onClose={() => setShowNoBackupModal(false)}
+        >
+          <p className="text-sm text-gray-700 dark:text-gray-200 mb-6">
+            {t('step1.restore.notFound')}
+          </p>
+          <div className="flex justify-end">
+            <BaseButton onClick={() => setShowNoBackupModal(false)}>
+              {t('modals.accept')}
+            </BaseButton>
+          </div>
+        </BaseModal>
+
+        <Confirmation
+          isOpen={showOverwriteModal}
+          title={t('step1.restore.button')}
+          onCancel={() => setShowOverwriteModal(false)}
+          onConfirm={confirmRestore}
+          confirmText={t('modals.confirm')}
+          cancelText={t('modals.cancel')}
+        >
+          <>
+            <p className="text-gray-700 dark:text-gray-200">
+              {t('step1.restore.overwriteConfirm')}
+            </p>
+            <p className="text-gray-700 dark:text-gray-200 text-center">
+              {t('step1.restore.overwriteConfirm2')}
+            </p>
+          </>
+        </Confirmation>
+
+        <MultipleFilesModal
+          isOpen={showMultipleFilesModal}
+          files={multipleFiles}
+          onConfirm={handleMultipleFilesConfirm}
+          onCancel={handleMultipleFilesCancel}
+        />
+
+        <BaseModal
+          visible={showOldDataModal}
+          title={t('step1.oldDataModal.title')}
+          onClose={handleCancelOldDataModal}
+        >
+          <div className="space-y-4">
+            <p className="text-gray-700 dark:text-gray-300">
+              {t('step1.oldDataModal.message')}
+            </p>
+            <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+              <BaseIcon
+                name="alert"
+                className="w-5 h-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5"
+              />
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 font-semibold">
+                {t('step1.oldDataModal.warning')}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+              <BaseButton
+                onClick={handleCancelOldDataModal}
+                outlined
+                size="large"
+              >
+                {t('modals.cancel')}
+              </BaseButton>
+              <BaseButton
+                onClick={handleContinueUpload}
+                variant="secondary"
+                size="large"
+              >
+                {t('step1.oldDataModal.continue')}
+              </BaseButton>
+              <BaseButton
+                onClick={handleResetAndUpload}
+                variant="danger"
+                size="large"
+              >
+                {t('step1.oldDataModal.reset')}
+              </BaseButton>
+            </div>
+          </div>
+        </BaseModal>
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
 const EXPIRATION_DAYS = 2;
+const DEFAULT_EXPIRATION_MS = EXPIRATION_DAYS * 24 * 60 * 60 * 1000;
 
-/**
- * Save data to localStorage with expiration
- */
-export const saveToLocalStorage = (key, data) => {
+export const saveToLocalStorage = (
+  key,
+  data,
+  expirationMs = DEFAULT_EXPIRATION_MS,
+) => {
   const now = new Date();
-  const expirationDate = new Date(
-    now.getTime() + EXPIRATION_DAYS * 24 * 60 * 60 * 1000,
-  );
+  const expirationDate = new Date(now.getTime() + expirationMs);
 
   const item = {
     data,
@@ -17,9 +17,6 @@ export const saveToLocalStorage = (key, data) => {
   localStorage.setItem(key, JSON.stringify(item));
 };
 
-/**
- * Get data from localStorage and check if it's expired
- */
 export const getFromLocalStorage = (key) => {
   const itemStr = localStorage.getItem(key);
 
@@ -45,24 +42,25 @@ export const getFromLocalStorage = (key) => {
   }
 };
 
-/**
- * Remove data from localStorage
- */
 export const removeFromLocalStorage = (key) => {
   localStorage.removeItem(key);
 };
 
 /**
- * Clear all application data from localStorage
+ * Removes all known storage keys that have already expired.
+ * Call this once on app startup to proactively clean up stale data.
  */
-export const clearAllData = () => {
-  const keys = ['voterList', 'configuration', 'ballots'];
-  keys.forEach((key) => localStorage.removeItem(key));
+export const cleanupExpiredData = () => {
+  Object.values(STORAGE_KEYS).forEach((key) => {
+    // getFromLocalStorage already removes the item if expired
+    getFromLocalStorage(key);
+  });
 };
 
-// Storage keys
 export const STORAGE_KEYS = {
   VOTER_LIST: 'voterList',
   CONFIGURATION: 'configuration',
   BALLOTS: 'ballots',
+  BACKUP: 'backup',
+  TIE_BREAKER: 'tieBreaker',
 };

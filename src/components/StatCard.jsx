@@ -7,12 +7,14 @@ const StatCard = ({ label, value, color = 'blue' }) => {
     orange: 'bg-orange-50 text-orange-600',
     purple: 'bg-purple-50 text-purple-600',
     indigo: 'bg-indigo-50 text-indigo-600',
+    teal: 'bg-teal-50 text-teal-600',
+    black: 'dark:bg-gray-700 bg-gray-100 dark:text-white',
   };
 
   return (
-    <div className={`${colorClasses[color]} p-4 rounded-lg`}>
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className={`text-2xl font-bold ${colorClasses[color].split(' ')[1]}`}>
+    <div className={`${colorClasses[color]} p-4 rounded-lg flex items-center justify-between `}>
+      <p className="text-md text-gray-600 dark:text-gray-400">{label}</p>
+      <p className={`text-2xl font-bold`}>
         {value}
       </p>
     </div>

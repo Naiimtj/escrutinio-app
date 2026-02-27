@@ -6,6 +6,7 @@ import {
   Step2Page,
   Step3Page,
   Step4Page,
+  TiebreakerPage,
   NotFoundPage,
 } from './pages';
 
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="step1" element={<Step1Page />} />
           <Route path="step2" element={<Step2Page />} />
           <Route path="step3" element={<Step3Page />} />
+          <Route path="tiebreaker" element={<TiebreakerPage />} />
           <Route path="step4" element={<Step4Page />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

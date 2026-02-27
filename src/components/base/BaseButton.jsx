@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import BaseIcon from './BaseIcon';
 
 const sizes = ['small', 'large'];
 const types = ['button', 'submit', 'reset'];
 const tooltipPositions = ['top', 'bottom', 'left', 'right'];
+const iconPositions = ['left', 'right', 'top', 'bottom'];
 
 const getVariantClasses = (variant, outlined, text, disabled) => {
   if (disabled) {
@@ -24,26 +26,30 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
 
   if (outlined) {
     const outlinedVariants = {
-      primary: 'border-2 border-primary text-textPrimary hover:bg-lightPrimary',
-      secondary: 'border-2 border-grayMedium text-darkPrimary hover:bg-grayLight',
+      primary:
+        'border-2 border-primary text-textPrimary hover:bg-lightPrimary hover:text-extraDarkPrimary',
+      secondary:
+        'border-2 border-grayMedium text-darkPrimary hover:bg-grayLight',
       success:
         'border-2 border-lightGreen text-darkGreen hover:bg-lightGreen/20',
       warning: 'border-2 border-warning text-warning hover:bg-warning/20',
       danger: 'border-2 border-alert text-alert hover:bg-alert/20',
       info: 'border-2 border-lightBlue text-darkBlue hover:bg-lightBlue/20',
-      help: 'border-2 border-grayMedium text-grayDark hover:bg-grayLight',
+      help: 'border-2 border-grayMedium text-grayDark dark:text-grayMedium hover:bg-grayMedium hover:dark:text-grayDark',
     };
     return `bg-transparent ${outlinedVariants[variant] || outlinedVariants.primary}`;
   }
 
   const containedVariants = {
-    primary: 'bg-primary text-darkPrimary hover:bg-darkPrimary hover:text-lightPrimary',
-    secondary: 'bg-grayMedium text-darkPrimary hover:bg-grayDark hover:text-lightPrimary',
+    primary:
+      'bg-primary text-extraDarkPrimary hover:bg-darkPrimary hover:text-lightPrimary',
+    secondary:
+      'bg-grayMedium text-darkPrimary hover:bg-grayDark hover:text-lightPrimary',
     success: 'bg-lightGreen text-lightPrimary hover:bg-darkGreen',
-    warning: 'bg-warning text-warning hover:bg-warning/80',
-    danger: 'bg-alert text-alert hover:bg-alert/80',
+    warning: 'bg-warning text-white dark:text-black hover:bg-warning/80',
+    danger: 'bg-alert font-bold! text-white hover:bg-alert/80',
     info: 'bg-lightBlue text-darkPrimary hover:bg-darkPrimary hover:text-lightPrimary',
-    help: 'bg-grayMedium text-grayDark hover:bg-grayDark hover:text-darkPrimary',
+    help: 'bg-grayMedium text-grayDark hover:bg-grayDark hover:text-textPrimary',
   };
   return containedVariants[variant] || containedVariants.primary;
 };
@@ -164,6 +170,12 @@ export const BaseButton = ({
   tooltipDisabled = false,
   tooltipShowDelay = 100,
   tooltipHideDelay = 0,
+  icon,
+  iconPosition = iconPositions[0] || 'left',
+  iconSize,
+  iconColor,
+  iconClassName = '',
+  htmlFor,
   children,
   onClick,
 }) => {
@@ -182,6 +194,23 @@ export const BaseButton = ({
   const sizeClasses =
     size === 'large' ? 'px-6 py-3 text-lg font-semibold' : 'px-3 py-2 text-sm';
 
+  const getIconSize = () => {
+    if (iconSize) return iconSize;
+    return size === 'large' ? 'large' : 'md';
+  };
+
+  const getFlexDirection = () => {
+    if (iconPosition === 'top') return 'flex-col';
+    if (iconPosition === 'bottom') return 'flex-col-reverse';
+    if (iconPosition === 'right') return 'flex-row-reverse';
+    return 'flex-row';
+  };
+
+  const disabledClasses =
+    (disabled || loading) && htmlFor
+      ? 'pointer-events-none opacity-50 cursor-not-allowed'
+      : '';
+
   const baseClasses = `
     inline-flex items-center justify-center gap-2 
     font-medium rounded-md
@@ -191,20 +220,53 @@ export const BaseButton = ({
     cursor-pointer
     ${hasPaddingOverride ? '' : sizeClasses}
     ${variantClasses}
+    ${getFlexDirection()}
+    ${disabledClasses}
     ${className}
   `
     .trim()
     .replace(/\s+/g, ' ');
 
-  const contentButton = (
+  const renderIcon = () => {
+    if (!icon) return null;
+    return (
+      <BaseIcon
+        icon={icon}
+        size={getIconSize()}
+        color={iconColor || 'currentColor'}
+        className={iconClassName}
+        isClicked={false}
+      />
+    );
+  };
+
+  const renderContent = () => (
+    <>
+      {loading && <LoadingSpinner size={size === 'large' ? 20 : 16} />}
+      {!loading &&
+        icon &&
+        (iconPosition === 'left' || iconPosition === 'top') &&
+        renderIcon()}
+      {label || children}
+      {!loading &&
+        icon &&
+        (iconPosition === 'right' || iconPosition === 'bottom') &&
+        renderIcon()}
+    </>
+  );
+
+  const contentButton = htmlFor ? (
+    <label htmlFor={htmlFor} className={baseClasses}>
+      {renderContent()}
+    </label>
+  ) : (
     <button
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
       className={baseClasses}
     >
-      {loading && <LoadingSpinner size={size === 'large' ? 20 : 16} />}
-      {label || children}
+      {renderContent()}
     </button>
   );
 

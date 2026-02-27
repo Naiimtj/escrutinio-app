@@ -1,33 +1,42 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  saveToLocalStorage,
-  getFromLocalStorage,
-  STORAGE_KEYS,
-} from '../utils/localStorage';
+  getConfiguration,
+  getAllVoters,
+  getAllBallots,
+  getNextBallotNumber,
+  replaceAllBallots,
+  deleteAllBallots,
+  tiebreakerExists,
+  getTiebreakerData,
+  clearTiebreakerData,
+  extractInitialTiebreakerInfo,
+} from '../service';
+import { createEmptyBallot, getPersonFullName } from '../utils/helpers';
+import { BaseButton, BaseIcon } from './base';
 import {
-  createEmptyBallot,
-  getPersonFullName,
-  filterVotersByName,
-} from '../utils/helpers';
-import { buttonStyles } from '../utils/styles';
-import Modal from './Modal';
-import { BaseButton, BaseCheckbox, BaseIcon } from './base';
+  AllBallotsModal,
+  Confirmation,
+  DeleteBallotConfirmModal,
+  DeleteConfirmationModal,
+} from './modals';
+import VoteInput from './VoteInput';
+import { ToastContext } from '../context/ToastContext';
 
 const Step3 = ({ onNext, onBack }) => {
   const { t } = useTranslation();
+  const { showToast } = useContext(ToastContext);
 
-  // Load initial data from localStorage
   const loadInitialData = () => {
-    const configuration = getFromLocalStorage(STORAGE_KEYS.CONFIGURATION);
-    const voterList = getFromLocalStorage(STORAGE_KEYS.VOTER_LIST) || [];
-    const savedBallots = getFromLocalStorage(STORAGE_KEYS.BALLOTS) || [];
-    const ballotNumber = savedBallots.length + 1;
+    const configuration = getConfiguration();
+    const voterList = getAllVoters();
+    const savedBallots = getAllBallots();
+    const ballotNumber = getNextBallotNumber();
     const initialBallot = configuration
-      ? createEmptyBallot(configuration.votes)
+      ? createEmptyBallot(configuration.delegates)
       : [];
     const initialSearchTerms = configuration
-      ? new Array(configuration.votes).fill('')
+      ? new Array(configuration.delegates).fill('')
       : [];
 
     return {
@@ -40,7 +49,6 @@ const Step3 = ({ onNext, onBack }) => {
     };
   };
 
-  // Initialize all state with lazy initialization
   const initialData = useMemo(() => loadInitialData(), []);
 
   const [config] = useState(initialData.configuration);
@@ -53,19 +61,89 @@ const Step3 = ({ onNext, onBack }) => {
     initialData.initialSearchTerms,
   );
 
-  // Modals
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showNullModal, setShowNullModal] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
+  const [showAllBallotsModal, setShowAllBallotsModal] = useState(false);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [showResetAllBallotsModal, setShowResetAllBallotsModal] =
+    useState(false);
+  const [ballotToDelete, setBallotToDelete] = useState(null);
 
-  // Reset ballot to empty state
+  // Tiebreaker lock: if a tiebreaker already existed when step3 was opened,
+  // the AllBallotsModal will be locked until the user explicitly unlocks it.
+  const [hasTiebreaker, setHasTiebreaker] = useState(() => tiebreakerExists());
+  const [isBallotLocked, setIsBallotLocked] = useState(true);
+
+  /**
+   * After any ballot modification, re-evaluate whether the existing tiebreaker
+   * is still valid. If the tie situation has changed, clear it.
+   */
+  const checkTiebreakerImpact = useCallback(
+    (updatedBallots) => {
+      const tiebreakerData = getTiebreakerData();
+      if (!tiebreakerData) return;
+
+      // Original set of tied candidates from the first tiebreaker round
+      const originalTiedCandidates =
+        tiebreakerData.rounds?.[0]?.tiedCandidates ?? [];
+
+      // Recompute vote counts from the updated main ballots
+      const voteCounts = {};
+      updatedBallots.forEach((ballot) => {
+        if (!ballot.isNull && ballot.votes) {
+          ballot.votes.forEach((vote) => {
+            if (vote.person && !vote.person.isInvalid) {
+              const key = getPersonFullName(vote.person);
+              voteCounts[key] = (voteCounts[key] || 0) + 1;
+            }
+          });
+        }
+      });
+
+      const sortedResults = Object.entries(voteCounts)
+        .map(([name, votes]) => ({ name, votes }))
+        .sort((a, b) => b.votes - a.votes);
+
+      const { tiedCandidates: newTiedCandidates } =
+        extractInitialTiebreakerInfo(sortedResults, config.delegates);
+
+      const oldSet = new Set(originalTiedCandidates);
+      const newSet = new Set(newTiedCandidates);
+      const sameSet =
+        oldSet.size === newSet.size && [...oldSet].every((c) => newSet.has(c));
+
+      if (!sameSet) {
+        clearTiebreakerData();
+        setHasTiebreaker(false);
+        setIsBallotLocked(false);
+        showToast(t('step3.tiebreakerLock.tiebreakerCleared'), 'warning');
+      }
+    },
+    [config, showToast, t],
+  );
+
+  /** Close the AllBallotsModal and re-lock for next open */
+  const handleCloseAllBallots = useCallback(() => {
+    setShowAllBallotsModal(false);
+    setIsBallotLocked(true);
+  }, []);
+
   const resetBallot = useCallback(() => {
     if (!config) return;
-    setCurrentBallot(createEmptyBallot(config.votes));
-    setSearchTerms(new Array(config.votes).fill(''));
+    setCurrentBallot(createEmptyBallot(config.delegates));
+    setSearchTerms(new Array(config.delegates).fill(''));
   }, [config]);
 
-  // Vote handlers
+  const handleResetAllBallots = useCallback(() => {
+    deleteAllBallots();
+    setBallots([]);
+    setBallotNumber(1);
+    setEditingIndex(null);
+    resetBallot();
+    setShowResetAllBallotsModal(false);
+  }, [resetBallot]);
+
   const updateVote = useCallback((index, updates) => {
     setCurrentBallot((prev) => {
       const newBallot = [...prev];
@@ -104,7 +182,6 @@ const Step3 = ({ onNext, onBack }) => {
     });
   }, []);
 
-  // Ballot actions
   const saveBallot = useCallback(() => {
     const ballot = {
       id: crypto.randomUUID(),
@@ -119,48 +196,141 @@ const Step3 = ({ onNext, onBack }) => {
         : ballots.map((b, i) => (i === editingIndex ? ballot : b));
 
     setBallots(newBallots);
-    saveToLocalStorage(STORAGE_KEYS.BALLOTS, newBallots);
+    replaceAllBallots(newBallots);
 
     if (editingIndex === null) {
       setBallotNumber((prev) => prev + 1);
+    } else if (hasTiebreaker) {
+      checkTiebreakerImpact(newBallots);
     }
 
     setEditingIndex(null);
     resetBallot();
     setShowConfirmModal(false);
-  }, [currentBallot, ballotNumber, editingIndex, ballots, resetBallot]);
+  }, [
+    currentBallot,
+    ballotNumber,
+    editingIndex,
+    ballots,
+    resetBallot,
+    hasTiebreaker,
+    checkTiebreakerImpact,
+  ]);
 
   const saveNullBallot = useCallback(() => {
     const ballot = {
-      id: crypto.randomUUID(),
-      number: ballotNumber,
+      id:
+        editingIndex === null ? crypto.randomUUID() : ballots[editingIndex].id,
+      number: editingIndex === null ? ballotNumber : editingIndex + 1,
       votes: [],
       isNull: true,
       timestamp: new Date().toISOString(),
     };
 
-    const newBallots = [...ballots, ballot];
+    const newBallots =
+      editingIndex === null
+        ? [...ballots, ballot]
+        : ballots.map((b, i) => (i === editingIndex ? ballot : b));
+
     setBallots(newBallots);
-    saveToLocalStorage(STORAGE_KEYS.BALLOTS, newBallots);
-    setBallotNumber((prev) => prev + 1);
+    replaceAllBallots(newBallots);
+
+    if (editingIndex === null) {
+      setBallotNumber((prev) => prev + 1);
+    } else if (hasTiebreaker) {
+      checkTiebreakerImpact(newBallots);
+    }
+
+    setEditingIndex(null);
     resetBallot();
     setShowNullModal(false);
-  }, [ballotNumber, ballots, resetBallot]);
+  }, [
+    ballotNumber,
+    ballots,
+    editingIndex,
+    resetBallot,
+    hasTiebreaker,
+    checkTiebreakerImpact,
+  ]);
 
   const editPreviousBallot = useCallback(() => {
     if (ballots.length === 0 || !config) return;
 
     const lastBallot = ballots.at(-1);
-    const ballotVotes = createEmptyBallot(config.votes).map(
+    const ballotVotes = createEmptyBallot(config.delegates).map(
       (emptyVote, index) => lastBallot.votes[index] || emptyVote,
     );
 
     setCurrentBallot(ballotVotes);
     setEditingIndex(ballots.length - 1);
-    setSearchTerms(new Array(config.votes).fill(''));
+    setSearchTerms(new Array(config.delegates).fill(''));
   }, [ballots, config]);
 
-  // Computed values
+  const editBallotFromList = useCallback(
+    (index) => {
+      if (!config) return;
+
+      const ballot = ballots[index];
+      const ballotVotes = createEmptyBallot(config.delegates).map(
+        (emptyVote, i) => ballot.votes[i] || emptyVote,
+      );
+
+      setCurrentBallot(ballotVotes);
+      setEditingIndex(index);
+      setSearchTerms(new Array(config.delegates).fill(''));
+      handleCloseAllBallots();
+    },
+    [ballots, config, handleCloseAllBallots],
+  );
+
+  const confirmDeleteBallot = useCallback((ballot) => {
+    setBallotToDelete(ballot);
+    setShowDeleteConfirmModal(true);
+  }, []);
+
+  const deleteBallot = useCallback(() => {
+    if (!ballotToDelete) return;
+
+    const ballotIndex = ballots.findIndex((b) => b.id === ballotToDelete.id);
+    if (ballotIndex === -1) return;
+
+    const newBallots = ballots
+      .filter((b) => b.id !== ballotToDelete.id)
+      .map((b, index) => ({
+        ...b,
+        number: index + 1,
+      }));
+
+    setBallots(newBallots);
+    replaceAllBallots(newBallots);
+
+    if (ballotNumber > newBallots.length + 1) {
+      setBallotNumber(newBallots.length + 1);
+    }
+
+    if (editingIndex === ballotIndex) {
+      setEditingIndex(null);
+      resetBallot();
+    } else if (editingIndex > ballotIndex) {
+      setEditingIndex(editingIndex - 1);
+    }
+
+    if (hasTiebreaker) {
+      checkTiebreakerImpact(newBallots);
+    }
+
+    setShowDeleteConfirmModal(false);
+    setBallotToDelete(null);
+  }, [
+    ballotToDelete,
+    ballots,
+    editingIndex,
+    ballotNumber,
+    resetBallot,
+    hasTiebreaker,
+    checkTiebreakerImpact,
+  ]);
+
   const isEditing = editingIndex !== null;
   const currentBallotDisplay = isEditing ? editingIndex + 1 : ballotNumber;
   const validBallotCount = useMemo(
@@ -171,90 +341,149 @@ const Step3 = ({ onNext, onBack }) => {
     () => ballots.filter((b) => b.isNull).length,
     [ballots],
   );
+  const hasReachedLimit = !isEditing && ballots.length >= config.total_ballots;
+
+  const isCurrentBallotComplete = useMemo(
+    () => currentBallot.every((vote) => vote.person !== null),
+    [currentBallot],
+  );
 
   if (!config) return <div className="p-6">Cargando...</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('step3.title')}
         </h1>
-        <BaseButton
-          onClick={() => setShowFinishModal(true)}
+      </div>
+
+      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <BaseIcon
+          onClick={() => setShowResetAllBallotsModal(true)}
+          icon="restart"
           size="large"
-          variant="success"
-        >
-          {t('navigation.finish')}
-        </BaseButton>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-md p-8">
-        {/* Ballot Number */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-darkPrimary">
-            {t('step3.ballot')} #{currentBallotDisplay}
-            {isEditing && (
-              <span className="ml-2 text-sm text-orange-600">
-                ({t('step3.editMode')})
-              </span>
-            )}
-          </h2>
-        </div>
-
-        {/* Votes */}
-        <div className="space-y-4 mb-6">
-          {currentBallot.map((vote, index) => (
-            <VoteInput
-              key={vote.id}
-              index={index}
-              vote={vote}
-              searchTerm={searchTerms[index]}
-              voters={voters}
-              onPersonSelect={handlePersonSelect}
-              onNullVote={handleNullVote}
-              onSearchChange={handleSearchChange}
-              t={t}
-            />
-          ))}
-        </div>
-
-        {/* Actions */}
-        <div className="flex justify-between items-center pt-4">
-          <div className="flex gap-2">
-            <button onClick={onBack} className={buttonStyles.secondary}>
-              {t('navigation.back')}
-            </button>
-            <button
-              onClick={() => setShowNullModal(true)}
-              className={buttonStyles.danger}
-            >
-              {t('step3.nullBallot')}
-            </button>
-          </div>
-
-          <div className="flex gap-2">
-            {ballots.length > 0 && !isEditing && (
-              <button
-                onClick={editPreviousBallot}
-                className={buttonStyles.outline}
+          disabled={ballots.length === 0}
+          className="absolute top-2 right-2 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
+          tooltip={t('step2.resetModal.button')}
+        />
+        {hasReachedLimit ? (
+          <div className="text-center py-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                {t('step3.noMoreBallots')}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                {t('step3.noMoreBallotsMessage')}
+                <a
+                  className="text-textPrimary hover:underline cursor-pointer"
+                  onClick={onBack}
+                >
+                  {t('step3.updateBallotNumber')}
+                </a>
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                {t('step3.totalBallots')}: {ballots.length} /{' '}
+                {config.total_ballots}
+              </p>
+            </div>
+            <div className="flex justify-center items-center gap-4">
+              <BaseButton
+                onClick={() => setShowAllBallotsModal(true)}
+                variant="help"
               >
-                {t('step3.previousBallot')}
-              </button>
-            )}
-            <button
-              onClick={() => setShowConfirmModal(true)}
-              className={buttonStyles.primary}
-            >
-              {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
-            </button>
+                {t('step3.viewAllBallots')}
+              </BaseButton>
+            </div>
+
+            <div className="flex justify-center gap-4 mt-8">
+              <BaseButton
+                onClick={() => setShowFinishModal(true)}
+                size="large"
+                variant="primary"
+              >
+                {t('navigation.next')}
+              </BaseButton>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-6">
+              {t('step3.hint')}
+            </p>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Ballot Number */}
+            <div className="mb-6 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-darkPrimary">
+                {t('step3.ballot')} #{currentBallotDisplay}
+                {isEditing && (
+                  <span className="ml-2 text-sm text-orange-600">
+                    ({t('step3.editMode')})
+                  </span>
+                )}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                {ballots.length} / {config.total_ballots}{' '}
+                {t('step3.ballotsRegistered')}
+              </p>
+
+              <BaseButton
+                onClick={() => setShowAllBallotsModal(true)}
+                variant="outline"
+              >
+                {t('step3.viewAllBallots')}
+              </BaseButton>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {currentBallot.map((vote, index) => (
+                <VoteInput
+                  key={vote.id}
+                  index={index}
+                  vote={vote}
+                  searchTerm={searchTerms[index]}
+                  voters={voters}
+                  currentBallot={currentBallot}
+                  onPersonSelect={handlePersonSelect}
+                  onNullVote={handleNullVote}
+                  onSearchChange={handleSearchChange}
+                />
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center pt-4">
+              <div className="flex gap-2">
+                <BaseButton onClick={onBack} variant="secondary">
+                  {t('navigation.back')}
+                </BaseButton>
+                <BaseButton
+                  onClick={() => setShowNullModal(true)}
+                  variant="danger"
+                  outlined
+                >
+                  {t('step3.nullBallot')}
+                </BaseButton>
+              </div>
+
+              <div className="flex gap-2">
+                {ballots.length > 0 && !isEditing && (
+                  <BaseButton onClick={editPreviousBallot} outlined>
+                    {t('step3.previousBallot')}
+                  </BaseButton>
+                )}
+                <BaseButton
+                  onClick={() => setShowConfirmModal(true)}
+                  disabled={!isCurrentBallotComplete}
+                  variant="primary"
+                >
+                  {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
+                </BaseButton>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Modals */}
-      <Modal
+      <Confirmation
         isOpen={showConfirmModal}
         title={t('step3.confirmBallot')}
         onConfirm={saveBallot}
@@ -264,136 +493,81 @@ const Step3 = ({ onNext, onBack }) => {
           {currentBallot
             .filter((v) => v.person)
             .map((vote) => (
-              <div key={vote.id} className="text-sm text-gray-600">
+              <div
+                key={vote.id}
+                className="text-sm text-gray-600 dark:text-gray-300"
+              >
                 • {getPersonFullName(vote.person)}
               </div>
             ))}
         </div>
-      </Modal>
+      </Confirmation>
 
-      <Modal
+      <Confirmation
         isOpen={showNullModal}
         title={t('step3.nullBallotReasons')}
         onConfirm={saveNullBallot}
         onCancel={() => setShowNullModal(false)}
         confirmStyle="danger"
       >
-        <ul className="space-y-2 text-sm text-gray-600">
+        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <li>• {t('step3.reasons.repeated')}</li>
           <li>• {t('step3.reasons.less')}</li>
           <li>• {t('step3.reasons.more')}</li>
         </ul>
-      </Modal>
+      </Confirmation>
 
-      <Modal
+      <Confirmation
         isOpen={showFinishModal}
-        title={t('navigation.finish')}
+        title={t('navigation.summary')}
         onConfirm={onNext}
         onCancel={() => setShowFinishModal(false)}
         confirmStyle="success"
+        confirmText={t('navigation.next')}
       >
-        <div>
-          <p className="text-gray-600 mb-2">
-            {t('step3.ballot')}: {ballots.length}
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-gray-600 dark:text-gray-300 mb-2 text-center font-bold">
+            {t('step3.totalBallots')}: {ballots.length}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-darkGreen dark:text-darkGreen">
             {t('step4.statistics.validBallots')}: {validBallotCount}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-red-800 dark:text-alert">
             {t('step4.statistics.nullBallots')}: {nullBallotCount}
           </p>
         </div>
-      </Modal>
-    </div>
-  );
-};
+      </Confirmation>
 
-// Vote Input Component
-const VoteInput = ({
-  index,
-  vote,
-  searchTerm,
-  voters,
-  onPersonSelect,
-  onNullVote,
-  onSearchChange,
-  t,
-}) => {
-  const filteredVoters = filterVotersByName(voters, searchTerm);
+      <AllBallotsModal
+        visible={showAllBallotsModal}
+        ballots={ballots}
+        onClose={handleCloseAllBallots}
+        onEdit={editBallotFromList}
+        onDelete={confirmDeleteBallot}
+        hasTiebreaker={hasTiebreaker}
+        locked={isBallotLocked}
+        onUnlockRequest={() => setIsBallotLocked(false)}
+      />
 
-  return (
-    <div className="border border-gray-200 rounded-lg p-4">
-      <div className="flex items-center gap-4">
-        <div className="shrink-0 w-24">
-          <span className="font-medium text-darkPrimary">
-            {t('step3.vote')} {index + 1}
-          </span>
-        </div>
+      <DeleteBallotConfirmModal
+        isOpen={showDeleteConfirmModal}
+        ballot={ballotToDelete}
+        onConfirm={deleteBallot}
+        onCancel={() => {
+          setShowDeleteConfirmModal(false);
+          setBallotToDelete(null);
+        }}
+      />
 
-        <div className="grow relative">
-          {vote.person ? (
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-lightPrimary rounded-lg">
-              <div
-                className={
-                  vote.person.isInvalid ? 'text-red-600' : 'text-gray-800'
-                }
-              >
-                {getPersonFullName(vote.person)}{' '}
-                {!vote.person.isInvalid && (
-                  <span className="text-xs">({vote.person.location})</span>
-                )}
-              </div>
-              {!vote.isNull && (
-                <button
-                  onClick={() => onPersonSelect(index, null)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  ✕
-                </button>
-              )}
-              <BaseIcon
-                name="close"
-                className="text-red-600 hover:text-red-800 cursor-pointer"
-                onClick={() => onPersonSelect(index, null)}
-              />
-            </div>
-          ) : (
-            <>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => onSearchChange(index, e.target.value)}
-                placeholder={t('step3.searchPerson')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              {searchTerm && filteredVoters.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                  {filteredVoters.map((voter) => (
-                    <button
-                      key={voter.id}
-                      onClick={() => onPersonSelect(index, voter)}
-                      className="w-full text-left px-4 py-2 hover:bg-lightPrimary cursor-pointer transition"
-                    >
-                      {getPersonFullName(voter)}
-                      <span className="text-sm text-gray-500 ml-2">
-                        ({voter.location})
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="shrink-0">
-          <BaseCheckbox
-            checked={vote.isNull}
-            onChange={(isChecked) => onNullVote(index, isChecked)}
-            label={t('step3.nullVote')}
-          />
-        </div>
-      </div>
+      <DeleteConfirmationModal
+        isOpen={showResetAllBallotsModal}
+        title={t('step3.resetModal.title')}
+        message={t('step3.resetModal.message')}
+        warningMessage={t('step3.resetModal.warning')}
+        onConfirm={handleResetAllBallots}
+        onCancel={() => setShowResetAllBallotsModal(false)}
+        confirmText={t('step3.resetModal.button')}
+      />
     </div>
   );
 };

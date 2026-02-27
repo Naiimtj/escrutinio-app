@@ -20,6 +20,7 @@ const BaseDropFile = ({
   disabled = false,
   onAddFiles,
   onDeleteFile,
+  onExceedLimit,
   ...props
 }) => {
   const fileInputRef = useRef(null);
@@ -53,22 +54,26 @@ const BaseDropFile = ({
     const currentFilesCount = files?.length ?? 0;
     const availableSlots = limitNumberFiles - currentFilesCount;
 
-    if (addedFiles.length > availableSlots) {
-      if (availableSlots <= 0) {
-        return;
-      }
-      addedFiles = addedFiles.slice(0, availableSlots);
-    }
+    if (availableSlots <= 0) return;
 
     const invalidFiles = getInvalidFiles(addedFiles);
+    const validFiles = addedFiles.filter((f) => !invalidFiles.includes(f));
+
     if (invalidFiles.length > 0) {
       setShowErrorMessage(true);
       setInvalidFilesNames(invalidFiles.map((file) => file.name));
+      if (validFiles.length === 0) return;
+    }
+
+    // If valid files exceed the available slots, delegate to the caller
+    if (validFiles.length > availableSlots && onExceedLimit) {
+      onExceedLimit(validFiles);
       return;
     }
 
+    const filesToAdd = validFiles.slice(0, availableSlots);
     if (onAddFiles) {
-      onAddFiles(addedFiles);
+      onAddFiles(filesToAdd);
     }
   };
 
@@ -82,6 +87,8 @@ const BaseDropFile = ({
     if (input.files && input.files.length > 0) {
       cleanErrorFiles();
       addFiles(Array.from(input.files));
+      // Reset so the same file(s) can be selected again after cancelling
+      input.value = '';
     }
   };
 
@@ -116,23 +123,27 @@ const BaseDropFile = ({
           <div className="flex flex-col gap-2.5 w-full">
             <div className="flex flex-row items-center gap-4 w-full">
               <div className="flex-1">
-                <h2 className="text-lg text-gray-900 font-medium">{label}</h2>
-                <span className="flex text-sm text-gray-500 text-left">
+                <h2 className="text-lg text-gray-900 dark:text-grayLight font-medium">
+                  {label}
+                </h2>
+                <span className="flex text-sm text-gray-500 dark:text-grayMedium text-left">
                   {labelFormat} {formats?.join(', ').toUpperCase()}
                 </span>
-                <div className="flex text-sm text-gray-500 text-left">
+                <div className="flex text-sm text-gray-500 dark:text-grayMedium text-left">
                   {labelLimit} {limitSizeFile} MB | {labelMaxFile}:{' '}
                   {limitNumberFiles}
                   {uploadIsDisabled && (
-                    <span className="flex flex-row gap-2 items-center ml-2 text-yellow-600 text-xs">
-                      <i className="pi pi-exclamation-circle" />
+                    <BaseIcon
+                      icon="pi-exclamation-circle"
+                      className="ml-2 text-yellow-600"
+                    >
                       Reached maximum number of files
-                    </span>
+                    </BaseIcon>
                   )}
                 </div>
               </div>
 
-              <div className="text-gray-400">
+              <div className="text-gray-400 dark:text-grayMedium">
                 <BaseButton
                   outlined
                   onClick={handleClickBrowse}
@@ -154,7 +165,7 @@ const BaseDropFile = ({
 
             {!uploadIsDisabled && (
               <div className="flex flex-col items-center justify-center">
-                <div className="text-gray-400 w-full flex flex-col gap-2 justify-center items-center border-dashed border-2 py-10">
+                <div className="text-gray-400 dark:text-grayMedium w-full flex flex-col gap-2 justify-center items-center border-dashed border-2 py-10">
                   <i className="pi pi-file" style={{ fontSize: '1.5rem' }} />
                   <span>{labelDragAndDrop}</span>
                 </div>

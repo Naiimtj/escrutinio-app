@@ -15,7 +15,7 @@ const BaseLabel = ({
   return (
     <div
       htmlFor={htmlFor}
-      className={`text-sm font-medium text-gray-700 ${className}`}
+      className={`text-sm font-medium text-gray-700 dark:text-grayLight ${className}`}
       {...props}
     >
       <div className="flex items-center gap-1">

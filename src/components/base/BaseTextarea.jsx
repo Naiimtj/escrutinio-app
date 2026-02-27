@@ -25,7 +25,7 @@ const BaseTextarea = ({
   return (
     <div className="flex flex-col w-full gap-2">
       {label && (
-        <BaseLabel label={label} tooltip={tooltip} mandatory={mandatory} />
+        <BaseLabel label={label} tooltip={tooltip} mandatory={mandatory} className='font-semibold! text-lg' />
       )}
 
       <textarea

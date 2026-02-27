@@ -5,6 +5,8 @@ const BaseModal = ({
   title,
   onClose,
   fullscreen = false,
+  fullHeight = false,
+  fullWidth = false,
   closeButtonHidden = false,
   children,
   ...props
@@ -13,29 +15,32 @@ const BaseModal = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+      onClick={onClose}
       {...props}
     >
       <div
-        className={`bg-white rounded-lg shadow-lg relative max-h-[90vh] overflow-y-auto ${
-          fullscreen ? 'w-full h-full' : 'w-[90%] max-w-2xl'
-        }`}
+        className={`bg-gray-50 dark:bg-gray-600 rounded-lg shadow-lg relative overflow-y-auto ${
+          fullscreen ? 'w-full h-full' : 'max-w-[90%] max-h-[90%]'
+        } ${fullHeight ? 'h-full max-w-[90%]' : ''} ${fullWidth ? 'w-full max-h-[90%]' : ''}`}
+        onClick={(e) => e.stopPropagation()}
       >
-        {!closeButtonHidden && (
-          <BaseIcon
-            icon="close"
-            onClick={onClose}
-            className="absolute z-10 right-0 top-0 m-1 fill-darkPrimary hover:fill-textPrimary cursor-pointer"
-          />
-        )}
-
-        <div className="bg-gray-50 p-6">
-          {title && (
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4 text-center">
-              {title}
-            </h2>
+        <div className="bg-gray-50 dark:bg-gray-800">
+          {!closeButtonHidden && (
+            <BaseIcon
+              icon="close"
+              onClick={onClose}
+              className="sticky z-10 right-2 top-2 ml-auto dark:fill-primary fill-textPrimary dark:hover:fill-textPrimary hover:fill-darkPrimary cursor-pointer"
+            />
           )}
-          {children}
+          <div className="px-6 pb-6">
+            {title && (
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
+                {title}
+              </h2>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     </div>

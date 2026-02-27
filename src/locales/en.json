@@ -1,9 +1,9 @@
 {
   "app": {
-    "title": "Vote Counting System"
+    "title": "Scrutineers System"
   },
   "home": {
-    "welcome": "Welcome to the Vote Counting System",
+    "welcome": "Welcome to the Scrutineers system",
     "description": "A simple and efficient tool to manage the electoral vote counting process. Follow the steps to load voters, configure the counting, register ballots, and obtain results.",
     "startButton": "Start Counting",
     "processTitle": "Counting Process",
@@ -12,7 +12,7 @@
       "step1Description": "Easily import the voter list from an Excel file",
       "step2Title": "Configuration",
       "step2Description": "Define delegates, scrutineers, and process parameters",
-      "step3Title": "Vote Registration",
+      "step3Title": "Votes Registration",
       "step3Description": "Register each ballot quickly and accurately"
     },
     "steps": {
@@ -24,6 +24,35 @@
       "step3Description": "Register each ballot by selecting the corresponding votes",
       "step4Title": "View Results",
       "step4Description": "View final results and generate PDF reports"
+    },
+    "importantInfo": {
+      "title": "Important Information about Privacy and Security",
+      "storage": {
+        "title": "Local Storage",
+        "description": "All information is stored exclusively in your device's browser for a duration of 2 days."
+      },
+      "privacy": {
+        "title": "Privacy Guaranteed",
+        "description": "Data is never shared with external servers or databases. Your information remains completely private."
+      },
+      "security": {
+        "title": "Security Responsibility",
+        "description": "The security of your information depends on the security of your device. Ensure it remains protected."
+      },
+      "deletion": {
+        "title": "Deletion Confirmation",
+        "description": "Confirmation will always be requested before deleting any stored information."
+      },
+      "recommendations": {
+        "title": "Important Recommendations",
+        "items": {
+          "backup": "Download results in PDF as a backup once counting is complete.",
+          "browser": "Do not close the browser or tab during the counting process.",
+          "power": "Ensure your device has sufficient battery or is plugged into power.",
+          "device": "Use a trusted and secure device to perform the scrutiny.",
+          "singleDevice": "Perform the entire process on the same device and browser."
+        }
+      }
     }
   },
   "notFound": {
@@ -52,12 +81,25 @@
     "flag": "flag",
     "english": "English",
     "spanish": "Spanish",
-    "errorChangingLanguage": "Error changing language"
+    "errorChangingLanguage": "Error changing language",
+    "summary": "Summary",
+    "loading": "Loading"
   },
   "step1": {
     "title": "Step 1: Load Voter List",
     "upload": "Upload Excel file",
     "download": "Download example",
+    "dragAndDrop": "Drag and drop your Excel file here",
+    "demo": {
+      "sheetName": "Voters",
+      "fileName": "voter_list_example.xlsx",
+      "columns": {
+        "name": "Name",
+        "lastName1": "First last name",
+        "lastName2": "Second last name",
+        "location": "Location"
+      }
+    },
     "uploadSuccess": "List uploaded successfully",
     "totalPeople": "Total people in the list",
     "columns": {
@@ -70,7 +112,8 @@
     "errors": {
       "invalidFile": "Please select a valid Excel file (.xlsx or .xls)",
       "processing": "Error processing the file",
-      "passwordProtected": "This file is password protected and cannot be processed directly."
+      "passwordProtected": "This file is password protected and cannot be processed directly.",
+      "minColumns": "The file must have at least {{count}} columns."
     },
     "haveList": "There is already a processed list",
     "passwordInstructions": "To process this file, you must first unprotect it. Follow these steps:",
@@ -79,26 +122,95 @@
     "file-password-step3": "Select “Encrypt with password”.",
     "file-password-step4": "Remove the password (leave the field blank) and save the file.",
     "file-password-step5": "Upload the unprotected file again.",
-    "tryAgain": "Understood, try again"
+    "tryAgain": "Understood, try again",
+    "restore": {
+      "button": "Restore last scrutiny",
+      "confirm": "The last scrutiny saved in backup will be restored and current process data will be replaced.",
+      "overwriteConfirm": "There is already data in the current scrutiny. If you continue, it will be lost with no recovery option.",
+      "success": "Scrutiny restored successfully.",
+      "notFound": "There is no backup available to restore.",
+      "overwriteConfirm2": "Do you want to overwrite it with the backup?"
+    },
+    "oldDataModal": {
+      "title": "Existing data detected",
+      "message": "There is existing configuration data and/or registered ballots. What do you want to do with them before loading the new file?",
+      "warning": "If you delete the data, all configuration and registered ballots will be permanently lost.",
+      "reset": "Delete and load",
+      "continue": "Keep and load"
+    },
+    "fileLimits": "Limit of file:",
+    "maxFile": "Max. number of files",
+    "multipleFilesModal": {
+      "title": "Multiple files detected",
+      "message": "{{count}} files were added. Select which one you want to import:"
+    }
   },
   "step2": {
     "title": "Step 2: Vote Counting Configuration",
     "form": {
-      "delegates": "Number of delegates",
+      "delegates": "Number of delegates to elect",
       "areaName": "Delegate name",
-      "votes": "Number of votes/ballot",
+      "votes": "Number of delegates",
       "scrutineers": "Number of scrutineers",
       "scrutineersNames": "Names of scrutineers",
       "delegateAreas": "Delegate names",
-      "scrutineerName": "Name of the scrutineer"
+      "scrutineerName": "Name of the scrutineer",
+      "maxDelegates": "Maximum 9",
+      "totalBallots": "Total number of believers who voted",
+      "ballots": "Number of believers who voted by postal",
+      "ballotsHelper": "Maximum {{max}}",
+      "delegatesHelper": "Number of votes per ballot - Maximum 9",
+      "electoralArea": "Electoral Area",
+      "electionDate": "Election Date",
+      "electionType": "Election Type",
+      "selectOption": "Select an option (optional)",
+      "electionTypes": {
+        "areaConvention": "Area Convention",
+        "nationalConvention": "National Convention",
+        "localSpiritualAssembly": "Local Spiritual Assembly Election",
+        "other": "Other",
+        "coordinator": "Coordinator",
+        "secretary": "Secretary"
+      },
+      "electionTypeOther": "Specify election type",
+      "electionTypeOtherPlaceholder": "Enter election type...",
+      "totalVotersPossible": "Number of possible votes",
+      "ballotsPerson": "Number of believers who voted in person",
+      "calculatedAutomatically": "Calculated automatically"
     },
     "errors": {
       "required": "This field is required",
-      "min": "Value must be greater than 0"
+      "min": "Value must be greater than 0",
+      "max": "The value must be less than 9.",
+      "maxBallots": "The value must be less than or equal to {{max}}.",
+      "delegatesClamped": "Maximum delegates allowed is {{max}} (cannot exceed the number of believers)."
+    },
+    "believersInfo": {
+      "title": "Number of believers voting on the list",
+      "believers": "believers",
+      "addBeliever": "Add Believer"
+    },
+    "modal": {
+      "title": "Add New Believer",
+      "nombre": "Name",
+      "primerApellido": "First Last Name",
+      "segundoApellido": "Second Last Name",
+      "localidad": "Location"
+    },
+    "confirmModal": {
+      "title": "Confirm delegates change",
+      "message": "You have changed the number of delegates to elect. By changing this value, the number of votes per ballot will be modified.",
+      "warning": "All stored votes will be deleted!"
+    },
+    "resetModal": {
+      "title": "Reset configuration",
+      "message": "Do you want to delete the current configuration?",
+      "warning": "The saved configuration will be deleted. Registered ballots will not be affected. This action cannot be undone!",
+      "button": "Reset"
     }
   },
   "step3": {
-    "title": "Step 3: Ballot Registration",
+    "title": "Step 3: Ballots Registration",
     "ballot": "Ballot",
     "vote": "Vote",
     "nullVote": "Null vote",
@@ -117,24 +229,150 @@
     "confirmBallot": "Confirm ballot?",
     "ballotSaved": "Ballot saved successfully",
     "editMode": "Editing ballot",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "noMoreBallots": "No ballots available",
+    "noMoreBallotsMessage": "If there are more ballots, go back to ",
+    "totalBallots": "Registered ballots",
+    "ballotsRegistered": "ballots registered",
+    "updateBallotNumber": "Step 2 to update ballot number",
+    "viewAllBallots": "View all ballots",
+    "ballots": "ballots",
+    "allBallotsTitle": "All registered ballots",
+    "ballotDetails": "Ballot details",
+    "noVotes": "No votes",
+    "deleteBallot": "Delete",
+    "editBallot": "Edit",
+    "confirmDelete": "Delete Ballot",
+    "confirmDeleteMessage": "Are you sure you want to delete ballot #{{number}}? This action cannot be undone.",
+    "nullBallotLabel": "Null Ballot",
+    "alreadySelected": "Name already selected in another vote",
+    "noResults": "No results found",
+    "hint": "Stored votes will not be deleted",
+    "resetModal": {
+      "title": "Delete all ballots",
+      "message": "Do you want to delete all registered ballots?",
+      "warning": "All saved ballots will be deleted. This action cannot be undone!",
+      "button": "Delete all"
+    },
+    "viewAllBallotsCurrentRound": "View ballots this round",
+    "tiebreakerLock": {
+      "lockedMessage": "Editing locked",
+      "clickToUnlock": "Click the lock to unlock",
+      "unlockedMessage": "Editing unlocked — be careful, changes are live",
+      "warningTitle": "Warning! Tiebreaker in progress",
+      "warningMessage": "These changes will affect the current votes and the tiebreaker may be affected or removed.",
+      "confirmUnlock": "Unlock anyway",
+      "cancelUnlock": "Cancel",
+      "tiebreakerCleared": "The tiebreaker has been removed because the results have changed."
+    }
   },
   "step4": {
     "title": "Step 4: Vote Counting Results",
+    "comments": {
+      "title": "Comments",
+      "placeholder": "Write observations or additional information here..."
+    },
     "statistics": {
-      "totalVoters": "Total number of voters in list",
+      "title": "Statistics",
+      "totalVoters": "Total number of believers",
       "totalBallots": "Total number of ballots",
       "nullBallots": "Null ballots",
       "validBallots": "Valid ballots",
       "invalidNames": "Invalid names",
       "totalPossibleVotes": "Total possible votes",
-      "validVotes": "Valid votes"
+      "validVotes": "Valid votes",
+      "delegatesToElect": "Delegates to elect"
     },
     "results": "Results",
     "name": "Name",
     "votes": "Votes",
+    "noResults": "No results available",
+    "generatedLabel": "Generated",
+    "pdfFilename": {
+      "defaultArea": "area",
+      "defaultType": "type"
+    },
+    "pdf": {
+      "documentTitle": "MINUTES OF THE DELEGATES ELECTION",
+      "electoralAreaPrefix": "Electoral Area of",
+      "electionDateLabel": "Election date",
+      "stat1": "Total number of believers on the voting list",
+      "stat1a": "Number of believers who voted in person",
+      "stat1b": "Number of believers who voted by mail",
+      "stat2": "Total number of believers who voted",
+      "stat3": "Number of delegates to elect",
+      "stat4": "Number of invalid votes",
+      "stat5": "Number of null ballots",
+      "scrutineersLabel": "Name of the scrutineers",
+      "allResultsPageTitle": "Voting Results",
+      "ballotsPageTitle": "Voting List",
+      "tiebreakerPageTitle": "Tiebreaker",
+      "roundResultsTitle": "Round Results",
+      "roundResultStatus": "Status",
+      "vote": "Vote",
+      "nullBallotLabel": "NULL BALLOT",
+      "electedDelegates": "Elected Delegates",
+      "colNombre": "Name",
+      "colAp1": "First Surname",
+      "colAp2": "Second Surname",
+      "colVotos": "Votes"
+    },
     "downloadPDF": "Download PDF",
-    "backToVoting": "Continue adding ballots"
+    "backToVoting": "Continue adding ballots",
+    "tieWarning": "Warning: Tie detected",
+    "tieWarningMessage": "The last elected delegate has the same number of votes as the next candidate. A tiebreaker is required.",
+    "tiebreaker": {
+      "viewAllRoundsResult": "View results for all rounds",
+      "allRoundsTitle": "All rounds results",
+      "noRounds": "No rounds available",
+      "roundResolved": "Round resolved",
+      "roundStillTied": "There is still a tie between: {{names}}. Another round is needed to determine {{needed}} delegate(s).",
+      "startButton": "Tiebreaker voting",
+      "viewResultsButton": "View tiebreaker results",
+      "pageTitle": "Tiebreaker voting",
+      "pageSubtitle": "Vote exclusively between the tied candidates until the tie is resolved.",
+      "modalTitle": "Tiebreaker voting",
+      "stepLabel": "Tiebreaker",
+      "round": "Round",
+      "restartAll": "Restart tiebreaker",
+      "tiedCandidates": "Tied candidates:",
+      "winnersNeededInfo": "Winners needed: {{count}}",
+      "ballotsEntered": "Ballots entered: {{count}}",
+      "deleteLastBallot": "Delete last ballot",
+      "viewAllBallots": "View all ballots",
+      "allBallotsTitle": "Round ballots",
+      "saveBallot": "Save ballot",
+      "computeResults": "View results ({{count}} ballots)",
+      "roundResultsTitle": "Round {{round}} Results",
+      "elected": "Elected",
+      "stillTied": "Still tied",
+      "tieResolved": "The tie has been resolved. Confirm the results.",
+      "tieStillExists": "There is still a tie between: {{names}}. Another round is needed to determine {{needed}} delegate(s).",
+      "backToVoting": "Back to voting",
+      "startNextRound": "Start next round",
+      "confirmResult": "Confirm result",
+      "resolvedTitle": "Tiebreaker resolved",
+      "resolvedSubtitle": "The tiebreaker has been completed. Click to view the elected delegates.",
+      "byTiebreaker": "by tiebreaker",
+      "goToResults": "View final results",
+      "backToStep4": "Back to results",
+      "restartConfirmTitle": "Restart tiebreaker",
+      "restartConfirmMessage": "Are you sure you want to restart the tiebreaker? All rounds and recorded ballots will be lost.",
+      "deleteBallotTitle": "Delete ballot",
+      "deleteBallotMessage": "Are you sure you want to delete ballot #{{number}}?",
+      "deleteBallotConfirm": "Delete ballot",
+      "backToVotingConfirmTitle": "Back to voting?",
+      "backToVotingConfirmMessage": "Going back to voting will delete all ballots recorded in this round. Do you want to continue?",
+      "backToVotingConfirm": "Yes, delete ballots",
+      "ballotCount": "ballot(s)"
+    },
+    "delegatesHighlighted": "The first {{count}} candidates are highlighted as elected delegates",
+    "backToStep2": "Return to Step 2: Configuration",
+    "clearData": "Clear data and start over",
+    "clearDataTooltip": "Clear current data",
+    "clearDataConfirm": "You are about to delete all current scrutiny data (list, configuration, and ballots) to start from scratch.",
+    "clearDataSuccess": "Current data removed and saved in backup. You can restore it from Step 1.",
+    "clearDataConfirm2": "This action may impact the ongoing process"
   },
   "modals": {
     "confirm": "Confirm",

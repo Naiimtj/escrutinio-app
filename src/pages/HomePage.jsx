@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { BaseButton, BaseIcon } from '../components/base';
+import BaseExpandableSection from '../components/base/BaseExpandableSection';
 
 const HomePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <div className="from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300 w-full">
+    <div className="from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300 w-full justify-center items-center flex flex-col md:gap-6">
+      <img src="/logo.svg" alt="Escrutinio Logo" className="w-44 h-44" />
       {/* Hero Section */}
       <div className="text-center mb-16 flex flex-col items-center gap-4 ">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
@@ -26,112 +28,206 @@ const HomePage = () => {
         </BaseButton>
       </div>
 
-      {/* Features Grid */}
-      <div className="grid md:grid-cols-3 gap-8 mb-16">
-        {/* Feature 1 */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              className="w-6 h-6 text-blue-600 dark:text-blue-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      <div className="flex flex-row gap-8 w-full justify-center">
+        {/* Features Grid */}
+        <div className="flex flex-col gap-4 ">
+          {/* Feature 1 */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
+              <BaseIcon
+                icon="documentExcel"
+                size="large"
+                className="fill-black dark:fill-white"
               />
-            </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              {t('home.features.step1Title')}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              {t('home.features.step1Description')}
+            </p>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {t('home.features.step1Title')}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
-            {t('home.features.step1Description')}
-          </p>
+
+          {/* Feature 2 */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
+              <BaseIcon
+                icon="settings"
+                size="large"
+                className="fill-black dark:fill-white"
+              />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              {t('home.features.step2Title')}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              {t('home.features.step2Description')}
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
+              <BaseIcon
+                icon="logs"
+                size="large"
+                className="fill-black dark:fill-white dark:stroke-white"
+              />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              {t('home.features.step3Title')}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              {t('home.features.step3Description')}
+            </p>
+          </div>
         </div>
 
-        {/* Feature 2 */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-          <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              className="w-6 h-6 text-green-600 dark:text-green-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
+        {/* Process Overview */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 md:w-1/2 justify-center items-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            {t('home.processTitle')}
+          </h2>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className="flex items-start gap-4">
+                <div className="shrink-0 w-8 h-8 bg-primary text-black rounded-full flex items-center justify-center font-semibold text-sm">
+                  {step}
+                </div>
+                <div className="flex-1 pt-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                    {t(`home.steps.step${step}Title`)}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {t(`home.steps.step${step}Description`)}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {t('home.features.step2Title')}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
-            {t('home.features.step2Description')}
-          </p>
-        </div>
-
-        {/* Feature 3 */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-          <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              className="w-6 h-6 text-purple-600 dark:text-purple-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-              />
-            </svg>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            {t('home.features.step3Title')}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
-            {t('home.features.step3Description')}
-          </p>
         </div>
       </div>
-
-      {/* Process Overview */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-          {t('home.processTitle')}
-        </h2>
-        <div className="space-y-4">
-          {[1, 2, 3, 4].map((step) => (
-            <div key={step} className="flex items-start gap-4">
-              <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-semibold text-sm">
-                {step}
-              </div>
-              <div className="flex-1 pt-1">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                  {t(`home.steps.step${step}Title`)}
+      {/* Important Information Section */}
+      <div className="w-full max-w-6xl mx-auto mb-8">
+        <BaseExpandableSection
+          title={
+            <div className="flex items-center gap-3">
+              <BaseIcon
+                icon="alert"
+                size="large"
+                className="fill-yellow-600 dark:fill-yellow-500"
+              />
+              <span className="text-yellow-900 dark:text-yellow-200">
+                {t('home.importantInfo.title')}
+              </span>
+            </div>
+          }
+          isOpenInitially={false}
+          styleClass="flex flex-col gap-4"
+          className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-500 dark:border-yellow-600 rounded-xl shadow-lg"
+        >
+          <div className="px-2">
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              {/* Storage Info */}
+              <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700/50">
+                <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-2 flex items-center gap-2">
+                  <BaseIcon
+                    icon="store"
+                    size="small"
+                    className="stroke-yellow-700 dark:stroke-yellow-400"
+                  />
+                  {t('home.importantInfo.storage.title')}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  {t(`home.steps.step${step}Description`)}
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('home.importantInfo.storage.description')}
+                </p>
+              </div>
+
+              {/* Privacy Info */}
+              <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700/50">
+                <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-2 flex items-center gap-2">
+                  <BaseIcon
+                    icon="check"
+                    size="small"
+                    className="stroke-yellow-700 dark:stroke-yellow-400"
+                  />
+                  {t('home.importantInfo.privacy.title')}
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('home.importantInfo.privacy.description')}
+                </p>
+              </div>
+
+              {/* Security Info */}
+              <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700/50">
+                <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-2 flex items-center gap-2">
+                  <BaseIcon
+                    icon="settings"
+                    size="small"
+                    className="fill-yellow-700 dark:fill-yellow-400"
+                  />
+                  {t('home.importantInfo.security.title')}
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('home.importantInfo.security.description')}
+                </p>
+              </div>
+
+              {/* Deletion Info */}
+              <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700/50">
+                <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-2 flex items-center gap-2">
+                  <BaseIcon
+                    icon="delete"
+                    size="small"
+                    className="stroke-yellow-700 dark:stroke-yellow-400"
+                  />
+                  {t('home.importantInfo.deletion.title')}
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('home.importantInfo.deletion.description')}
                 </p>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Recommendations */}
+            <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700/50">
+              <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-3 flex items-center gap-2">
+                <BaseIcon
+                  icon="info"
+                  size="small"
+                  className="stroke-yellow-700 dark:stroke-yellow-400"
+                />
+                {t('home.importantInfo.recommendations.title')}
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 dark:text-yellow-400 font-bold shrink-0">
+                    •
+                  </span>
+                  <span>
+                    {t('home.importantInfo.recommendations.items.backup')}
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 dark:text-yellow-400 font-bold shrink-0">
+                    •
+                  </span>
+                  <span>
+                    {t('home.importantInfo.recommendations.items.browser')}
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 dark:text-yellow-400 font-bold shrink-0">
+                    •
+                  </span>
+                  <span>
+                    {t('home.importantInfo.recommendations.items.singleDevice')}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </BaseExpandableSection>
       </div>
     </div>
   );

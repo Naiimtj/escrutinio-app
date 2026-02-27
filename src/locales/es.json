@@ -8,10 +8,22 @@
       "required": "Columnas requeridas en el orden indicado:"
     },
     "download": "Descargar ejemplo",
+    "dragAndDrop": "Arrastra y suelta tu archivo Excel aquí",
+    "demo": {
+      "sheetName": "Votantes",
+      "fileName": "ejemplo_lista_votantes.xlsx",
+      "columns": {
+        "name": "Nombre",
+        "lastName1": "Primer apellido",
+        "lastName2": "Segundo apellido",
+        "location": "Localidad de residencia"
+      }
+    },
     "errors": {
       "invalidFile": "Seleccione un archivo Excel válido (.xlsx o .xls)",
       "processing": "Error al procesar el archivo",
-      "passwordProtected": "Este archivo está protegido con contraseña y no puede ser procesado directamente."
+      "passwordProtected": "Este archivo está protegido con contraseña y no puede ser procesado directamente.",
+      "minColumns": "El archivo debe tener al menos {{count}} columnas."
     },
     "title": "Paso 1: cargar la lista de votantes",
     "totalPeople": "Total de personas en la lista",
@@ -24,34 +36,84 @@
     "file-password-step3": "Selecciona \"Cifrar con contraseña\".",
     "file-password-step4": "Elimina la contraseña (deja el campo vacío) y guarda el archivo.",
     "file-password-step5": "Vuelve a subir el archivo desprotegido.",
-    "tryAgain": "Entendido, intentar de nuevo"
+    "tryAgain": "Entendido, intentar de nuevo",
+    "restore": {
+      "button": "Recuperar último escrutinio",
+      "confirm": "Se restaurará el último escrutinio guardado en backup y se reemplazarán los datos actuales.",
+      "overwriteConfirm": "Ya existen datos en el escrutinio actual. Si continúas, se perderán sin posibilidad de recuperación.",
+      "success": "Escrutinio recuperado correctamente.",
+      "notFound": "No hay ninguna copia de seguridad disponible para recuperar.",
+      "overwriteConfirm2": "¿Deseas sobrescribir con el backup?"
+    },
+    "oldDataModal": {
+      "title": "Datos existentes detectados",
+      "message": "Ya existen datos de configuración y/o papeletas guardados. ¿Qué deseas hacer con ellos antes de cargar el nuevo archivo?",
+      "warning": "Si eliminas los datos, se perderá toda la configuración y las papeletas registradas.",
+      "reset": "Eliminar y cargar",
+      "continue": "Conservar y cargar"
+    },
+    "fileLimits": "Límite de archivo:",
+    "maxFile": "Máx. \nnúmero de archivos",
+    "multipleFilesModal": {
+      "title": "Varios archivos detectados",
+      "message": "Se han añadido {{count}} archivos. Selecciona cuál quieres importar:"
+    }
   },
   "app": {
-    "title": "Sistema de conteo de votos"
+    "title": "Sistema de Escrutinio"
   },
   "home": {
-    "description": "Una herramienta sencilla y eficaz para gestionar el proceso de recuento de votos electorales. \nSigue los pasos para cargar votantes, configurar el conteo, registrar boletas y obtener resultados.",
+    "description": "Una herramienta sencilla y eficaz para gestionar el proceso de recuento de votos electorales. \nSigue los pasos para cargar votantes, configurar el conteo, registrar papeletas y obtener resultados.",
     "features": {
       "step1Description": "Importe fácilmente la lista de votantes desde un archivo de Excel",
       "step1Title": "Importación de datos",
       "step2Description": "Definir delegados, escrutadores y parámetros de proceso.",
       "step2Title": "Configuración",
-      "step3Description": "Registre cada boleta de forma rápida y precisa",
-      "step3Title": "Registro de Voto"
+      "step3Description": "Registre cada papeleta de forma rápida y precisa",
+      "step3Title": "Registro de Votos"
     },
     "processTitle": "Proceso de conteo",
-    "startButton": "Empezar a contar",
+    "startButton": "Empezar conteo",
     "steps": {
       "step1Description": "Importe la lista de votantes desde un archivo Excel con los campos requeridos",
       "step1Title": "Cargar lista de votantes",
       "step2Description": "Definir el número de delegados, escrutadores y otros parámetros necesarios.",
       "step2Title": "Configurar el conteo",
-      "step3Description": "Registra cada boleta seleccionando los votos correspondientes",
-      "step3Title": "Registrar boletas",
+      "step3Description": "Registra cada papeleta seleccionando los votos correspondientes",
+      "step3Title": "Registrar papeletas",
       "step4Description": "Ver resultados finales y generar informes en PDF",
       "step4Title": "Ver resultados"
     },
-    "welcome": "Bienvenido al Sistema de Conteo de Votos"
+    "welcome": "Bienvenido al Sistema de Escrutinio",
+    "importantInfo": {
+      "title": "Información Importante sobre Privacidad y Seguridad",
+      "storage": {
+        "title": "Almacenamiento Local",
+        "description": "Toda la información se almacena exclusivamente en el navegador de su dispositivo con una duración de 2 días."
+      },
+      "privacy": {
+        "title": "Privacidad Garantizada",
+        "description": "Los datos no se comparten en ningún momento con servidores externos ni bases de datos. Su información permanece completamente privada."
+      },
+      "security": {
+        "title": "Responsabilidad de Seguridad",
+        "description": "La seguridad de la información dependerá de la seguridad de su dispositivo. Asegúrese de mantenerlo protegido."
+      },
+      "deletion": {
+        "title": "Confirmación de Borrado",
+        "description": "Siempre se solicitará una confirmación antes de eliminar cualquier información almacenada."
+      },
+      "recommendations": {
+        "title": "Recomendaciones Importantes",
+        "items": {
+          "backup": "Descargue los resultados en PDF como respaldo una vez finalizado el conteo.",
+          "browser": "No cierre el navegador ni la pestaña durante el proceso de conteo.",
+          "power": "Asegúrese de que su dispositivo tenga suficiente batería o esté conectado a la corriente.",
+          "device": "Use un dispositivo confiable y seguro para realizar el escrutinio.",
+          "singleDevice": "Realice todo el proceso en el mismo dispositivo y navegador."
+        }
+      }
+    }
   },
   "language": {
     "english": "Inglés",
@@ -83,7 +145,9 @@
     "step1": "Paso 1",
     "step2": "Paso 2",
     "step3": "Paso 3",
-    "step4": "Paso 4"
+    "step4": "Paso 4",
+    "summary": "Resumen",
+    "loading": "Cargando"
   },
   "notFound": {
     "backHome": "De vuelta a casa",
@@ -93,56 +157,230 @@
   "step2": {
     "errors": {
       "min": "El valor debe ser mayor que 0.",
-      "required": "Este campo es obligatorio"
+      "required": "Este campo es obligatorio",
+      "max": "El valor debe ser menor que 9.",
+      "maxBallots": "El valor debe ser menor o igual a {{max}}.",
+      "delegatesClamped": "El máximo de delegados permitido es {{max}} (no puede superar el número de creyentes)."
     },
     "form": {
       "areaName": "Nombre delegado",
-      "delegates": "Número de delegados",
+      "delegates": "Número de delegados a elegir",
       "scrutineers": "Número de escrutadores",
       "scrutineersNames": "Nombres de los escrutadores",
-      "votes": "Número de votos/papeleta",
+      "votes": "Número de delegados",
       "delegateAreas": "Nombres de delegados",
-      "scrutineerName": "Nombre del escrutador"
+      "scrutineerName": "Nombre del escrutador",
+      "maxDelegates": "Máximo 9",
+      "totalBallots": "Número total de creyentes que votaron",
+      "ballots": "Número de creyentes que votaron por correo",
+      "ballotsHelper": "Máximo {{max}}",
+      "delegatesHelper": "Número de votos por papeleta - Máximo 9",
+      "electoralArea": "Área Electoral",
+      "electionDate": "Fecha de la elección",
+      "electionType": "Tipo de elección",
+      "selectOption": "Seleccionar una opción",
+      "electionTypes": {
+        "areaConvention": "Convención de área",
+        "nationalConvention": "Convención nacional",
+        "localSpiritualAssembly": "Elección Asamblea Espiritual Local",
+        "coordinator": "Coordinador/a de zona",
+        "secretary": "Secretario/a",
+        "other": "Otros"
+      },
+      "electionTypeOther": "Especificar tipo de elección",
+      "electionTypeOtherPlaceholder": "Escriba el tipo de elección...",
+      "totalVotersPossible": "Número de votos posibles",
+      "ballotsPerson": "Número de creyentes que votaron en persona",
+      "calculatedAutomatically": "Calculado automáticamente"
     },
-    "title": "Paso 2: Configuración del conteo de votos"
+    "title": "Paso 2: Configuración del conteo de votos",
+    "believersInfo": {
+      "title": "Número de creyentes votantes en la lista",
+      "believers": "creyentes",
+      "addBeliever": "Añadir Creyente"
+    },
+    "modal": {
+      "title": "Añadir Nuevo Creyente",
+      "nombre": "Nombre",
+      "primerApellido": "Primer Apellido",
+      "segundoApellido": "Segundo Apellido",
+      "localidad": "Localidad de residencia"
+    },
+    "confirmModal": {
+      "title": "Confirmar cambio de delegados",
+      "message": "Has cambiado el número de delegados a elegir. Al cambiar este valor, se modificará el número de votos por papeleta.",
+      "warning": "¡Todos los votos almacenados se eliminarán!"
+    },
+    "resetModal": {
+      "title": "Resetear configuración",
+      "message": "¿Deseas eliminar toda la configuración actual?",
+      "warning": "¡Se eliminará la configuración guardada. Las papeletas registradas no se verán afectadas. Esta acción no se puede deshacer!",
+      "button": "Resetear"
+    }
   },
   "step3": {
     "ballot": "Papeleta",
-    "ballotSaved": "Boleta guardada exitosamente",
+    "ballotSaved": "Papeleta guardada exitosamente",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "confirmBallot": "¿Confirmar boleta?",
+    "confirmBallot": "¿Confirmar papeleta?",
     "editMode": "Editando papeleta",
     "invalidName": "Nombre no válido",
-    "nextBallot": "Próxima votación",
-    "nullBallot": "Voto nulo",
-    "nullBallotReasons": "Voto nulo por alguna de estas razones:",
+    "nextBallot": "Próxima papeleta",
+    "nullBallot": "Papeleta nula",
+    "nullBallotReasons": "Papeleta nula por alguna de estas razones:",
     "nullVote": "Voto nulo",
-    "previousBallot": "Votación anterior",
+    "previousBallot": "Papeleta anterior",
     "reasons": {
-      "less": "Si la boleta tiene menos nombres",
-      "more": "Si la boleta tiene nombres repetidos o adicionales",
+      "less": "Si la papeleta tiene menos nombres",
+      "more": "Si la papeleta tiene nombres repetidos o adicionales",
       "repeated": "Algún nombre repetido"
     },
     "searchPerson": "Buscar persona...",
-    "title": "Paso 3: Registro de boleta",
-    "vote": "Voto"
+    "title": "Paso 3: Registro de papeletas",
+    "vote": "Voto",
+    "noMoreBallots": "No hay más papeletas",
+    "noMoreBallotsMessage": "En caso de que hubiera más, volver al ",
+    "totalBallots": "Papeletas registradas",
+    "ballotsRegistered": "papeletas registradas",
+    "updateBallotNumber": "Paso 2 para actualizar número de papeletas",
+    "viewAllBallots": "Ver todas las papeletas",
+    "ballots": "papeletas",
+    "allBallotsTitle": "Todas las papeletas registradas",
+    "ballotDetails": "Detalles de la papeleta",
+    "noVotes": "Sin votos",
+    "deleteBallot": "Eliminar",
+    "editBallot": "Editar",
+    "confirmDelete": "Eliminación de Papeleta",
+    "confirmDeleteMessage": "¿Está seguro de que desea eliminar la papeleta #{{number}}? Esta acción no se puede deshacer.",
+    "nullBallotLabel": "Papeleta Nula",
+    "alreadySelected": "Nombre ya seleccionado en otro voto",
+    "noResults": "No se encontraron resultados",
+    "hint": "No se eliminaran las votaciones almacenadas",
+    "resetModal": {
+      "title": "Eliminar todas las papeletas",
+      "message": "¿Deseas eliminar todas las papeletas registradas?",
+      "warning": "¡Se eliminarán todas las papeletas guardadas. Esta acción no se puede deshacer!",
+      "button": "Eliminar todo"
+    },
+    "viewAllBallotsCurrentRound": "Ver papeletas de esta ronda",
+    "tiebreakerLock": {
+      "lockedMessage": "Edición bloqueada",
+      "clickToUnlock": "Pulsa el candado para desbloquear",
+      "unlockedMessage": "Edición desbloqueada — ten cuidado, cambios activos",
+      "warningTitle": "¡Atención! Desempate en curso",
+      "warningMessage": "Estos cambios afectarán a las votaciones actuales y el desempate puede verse afectado o eliminado.",
+      "confirmUnlock": "Desbloquear de todas formas",
+      "cancelUnlock": "Cancelar",
+      "tiebreakerCleared": "El desempate ha sido eliminado porque los resultados han cambiado."
+    }
   },
   "step4": {
-    "backToVoting": "Continuar agregando boletas",
+    "backToVoting": "Continuar agregando papeletas",
     "downloadPDF": "Descargar PDF",
+    "comments": {
+      "title": "Comentarios",
+      "placeholder": "Escribe aquí observaciones o información adicional..."
+    },
     "name": "Nombre",
     "results": "Resultados",
     "statistics": {
+      "title": "Estadísticas",
       "invalidNames": "Nombres no válidos",
-      "nullBallots": "Boletas nulas",
+      "nullBallots": "Papeletas nulas",
       "totalBallots": "Número total de papeletas",
       "totalPossibleVotes": "Total de votos posibles",
-      "totalVoters": "Número total de votantes en la lista",
-      "validBallots": "Boletas válidas",
-      "validVotes": "Votos válidos"
+      "totalVoters": "Número total de creyentes",
+      "validBallots": "Papeletas válidas",
+      "validVotes": "Votos válidos",
+      "delegatesToElect": "Delegados a elegir"
     },
     "title": "Paso 4: Resultados del recuento de votos",
-    "votes": "Votos"
+    "votes": "Votos",
+    "noResults": "No hay resultados disponibles",
+    "generatedLabel": "Generado",
+    "pdfFilename": {
+      "defaultArea": "area",
+      "defaultType": "tipo"
+    },
+    "pdf": {
+      "documentTitle": "ACTA DE LA ELECCIÓN DE LOS DELEGADOS",
+      "electoralAreaPrefix": "Área Electoral de",
+      "electionDateLabel": "Fecha de la elección",
+      "stat1": "Número total de creyentes votantes en la lista",
+      "stat1a": "Número de creyentes que votaron en persona",
+      "stat1b": "Número de creyentes que votaron por correo",
+      "stat2": "Número total de creyentes que votaron",
+      "stat3": "Número de delegados a elegir",
+      "stat4": "Número de votos nulos",
+      "stat5": "Número de papeletas nulas",
+      "scrutineersLabel": "Nombre de los escrutadores",
+      "allResultsPageTitle": "Resultados de las Votaciones",
+      "ballotsPageTitle": "Listado de Votaciones",
+      "tiebreakerPageTitle": "Desempate",
+      "roundResultsTitle": "Resultados de la Ronda",
+      "roundResultStatus": "Estado",
+      "vote": "Voto",
+      "nullBallotLabel": "PAPELETA NULA",
+      "electedDelegates": "Delegados Elegidos",
+      "colNombre": "Nombre",
+      "colAp1": "Primer Apellido",
+      "colAp2": "Segundo Apellido",
+      "colVotos": "Nº Votos"
+    },
+    "tieWarning": "Advertencia: Empate detectado",
+    "tieWarningMessage": "El último delegado electo tiene el mismo número de votos que el siguiente candidato. Se requiere un desempate.",
+    "tiebreaker": {
+      "viewAllRoundsResult": "Ver resultados rondas",
+      "allRoundsTitle": "Resultados de todas las rondas",
+      "noRounds": "No hay rondas disponibles",
+      "roundResolved": "Ronda resuelta",
+      "roundStillTied": "Sigue habiendo empate entre: {{names}}. Se necesita otra ronda para determinar {{needed}} delegado/s.",
+      "startButton": "Desempate de votaciones",
+      "viewResultsButton": "Ver resultados del desempate",
+      "pageTitle": "Desempate de votaciones",
+      "pageSubtitle": "Voto exclusivamente entre los candidatos empatados.",
+      "modalTitle": "Desempate de votaciones",
+      "stepLabel": "Desempate",
+      "round": "Ronda",
+      "restartAll": "Reiniciar desempate",
+      "tiedCandidates": "Candidatos empatados:",
+      "winnersNeededInfo": "Votos necesarios para desempatar: {{count}}",
+      "ballotsEntered": "Papeletas registradas: {{count}}",
+      "deleteLastBallot": "Eliminar última papeleta",
+      "viewAllBallots": "Ver todas las papeletas",
+      "allBallotsTitle": "Papeletas de la ronda",
+      "saveBallot": "Guardar papeleta",
+      "computeResults": "Ver resultados ({{count}} papeletas)",
+      "roundResultsTitle": "Resultados de la Ronda {{round}}",
+      "elected": "Elegido/a",
+      "stillTied": "Sigue empatado",
+      "tieResolved": "El empate ha sido resuelto. Confirma los resultados.",
+      "tieStillExists": "Sigue habiendo empate entre: {{names}}. Se necesita otra ronda para determinar {{needed}} delegado/s.",
+      "backToVoting": "Volver a votar",
+      "startNextRound": "Iniciar siguiente ronda",
+      "confirmResult": "Confirmar resultado",
+      "resolvedTitle": "Desempate resuelto",
+      "resolvedSubtitle": "El desempate ha sido completado. Haz clic para ver los delegados electos.",
+      "byTiebreaker": "por desempate",
+      "goToResults": "Ver resultados finales",
+      "backToStep4": "Volver a resultados",
+      "restartConfirmTitle": "Reiniciar desempate",
+      "restartConfirmMessage": "¿Estás seguro de que quieres reiniciar el desempate? Se perderán todas las rondas y papeletas registradas.",
+      "deleteBallotTitle": "Eliminar papeleta",
+      "deleteBallotMessage": "¿Estás seguro de que quieres eliminar la papeleta #{{number}}?",
+      "deleteBallotConfirm": "Eliminar papeleta",
+      "backToVotingConfirmTitle": "¿Volver a votar?",
+      "backToVotingConfirmMessage": "Si vuelves a la pantalla de votación se eliminarán todas las papeletas registradas en esta ronda. ¿Deseas continuar?",
+      "backToVotingConfirm": "Sí, eliminar papeletas",
+      "ballotCount": "papeleta(s)"
+    },
+    "delegatesHighlighted": "Los primeros {{count}} candidatos están resaltados como delegados electos",
+    "backToStep2": "Volver a Paso 2: Configuración",
+    "clearData": "Limpiar datos y empezar de cero",
+    "clearDataTooltip": "Elimina los datos actuales",
+    "clearDataConfirm": "Vas a eliminar todos los datos actuales del escrutinio (lista, configuración y papeletas) para empezar de cero.",
+    "clearDataSuccess": "Datos actuales eliminados y guardados en backup. Puedes restaurarlos desde el Paso 1.",
+    "clearDataConfirm2": "Esta acción puede afectar al proceso en curso"
   }
 }
