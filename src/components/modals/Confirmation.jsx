@@ -16,7 +16,7 @@ const Confirmation = ({
   return (
     <BaseModal visible={isOpen} title={title} onClose={onCancel}>
       <div className="mb-6">{children}</div>
-      <div className="flex justify-center gap-2">
+      <div className="flex md:flex-row flex-col justify-center gap-2">
         <BaseButton onClick={onCancel} variant="secondary" size="large">
           {cancelText || t('modals.cancel')}
         </BaseButton>

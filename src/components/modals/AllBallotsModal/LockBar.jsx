@@ -22,13 +22,13 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
 
   if (!locked) {
     return (
-      <div className="flex items-center gap-3 justify-center">
+      <div className="flex md:flex-row flex-col items-center md:gap-3 justify-center p-1 rounded-lg border border-green-600 dark:border-green-400">
         <BaseIcon
           icon="lockOpen"
           size="small"
           className="fill-green-600 dark:fill-green-400"
         />
-        <span className="text-sm text-green-700 dark:text-green-400 font-medium">
+        <span className="text-sm text-green-700 dark:text-green-400 font-medium text-center">
           {t('step3.tiebreakerLock.unlockedMessage')}
         </span>
       </div>
@@ -37,7 +37,7 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
 
   if (showConfirm) {
     return (
-      <div className="flex flex-col gap-2 items-center justify-center">
+      <div className="flex flex-col gap-2 items-center justify-center p-1 rounded-lg border border-amber-300 dark:border-amber-700">
         <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
           <BaseIcon
             icon="alert"
@@ -73,9 +73,10 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
       iconPosition="left"
       iconClassName="fill-amber-600 dark:fill-amber-400 group-hover:fill-amber-800 dark:group-hover:fill-amber-200 transition-colors"
       text={true}
-      className="group w-full justify-start"
+      className="group w-full flex md:flex-row! flex-col! justify-start rounded-lg border border-amber-300 dark:border-amber-700"
       variant="warning"
       onClick={handleClickUnlock}
+      size="large"
     >
       <span className="text-sm text-amber-700 dark:text-amber-300 group-hover:text-amber-900 dark:group-hover:text-amber-200 font-medium transition-colors">
         {t('step3.tiebreakerLock.lockedMessage')}

@@ -25,9 +25,9 @@ const BallotRow = ({ ballot, index, readOnly, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-lg p-4 bg-white dark:bg-gray-700 hover:shadow-md transition-shadow">
-      <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-        <h3 className="w-28 text-base flex items-center gap-4 font-semibold text-gray-800 dark:text-white">
+    <div className="rounded-lg md:p-4 p-2 bg-white dark:bg-gray-700 hover:shadow-md transition-shadow">
+      <div className="flex flex-col md:flex-row justify-between items-start md:gap-4 gap-2">
+        <h3 className="md:w-28 text-base font-semibold text-gray-800 dark:text-white">
           {t('step3.ballot')} #{ballot.number}
         </h3>
 
@@ -49,7 +49,7 @@ const BallotRow = ({ ballot, index, readOnly, onEdit, onDelete }) => {
         )}
 
         {!readOnly && (
-          <div className="flex gap-2">
+          <div className="flex flex-row-reverse md:flex-row justify-between gap-2 w-full md:w-auto">
             <BaseIcon
               icon="edit"
               onClick={() => onEdit(index)}

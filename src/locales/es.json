@@ -9,6 +9,7 @@
     },
     "download": "Descargar ejemplo",
     "dragAndDrop": "Arrastra y suelta tu archivo Excel aquí",
+    "maxFilesReached": "Se ha alcanzado el número máximo de archivos.",
     "demo": {
       "sheetName": "Votantes",
       "fileName": "ejemplo_lista_votantes.xlsx",
@@ -146,7 +147,7 @@
     "step2": "Paso 2",
     "step3": "Paso 3",
     "step4": "Paso 4",
-    "summary": "Resumen",
+    "summary": "Resumen Rápido",
     "loading": "Cargando"
   },
   "notFound": {

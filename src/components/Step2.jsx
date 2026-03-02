@@ -280,12 +280,12 @@ const Step2 = ({ onNext, onBack }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto md:p-6">
       <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-white text-center">
         {t('step2.title')}
       </h1>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md md:p-8 p-4 transition-colors duration-300">
         <div className="mb-6 p-4 bg-lightPrimary dark:bg-lightPrimary/10 rounded-lg border border-blue-200 dark:border-darkPrimary">
           <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
             <div className="flex flex-col justify-center items-center text-center">
@@ -435,10 +435,7 @@ const Step2 = ({ onNext, onBack }) => {
             </div>
           )}
 
-          <div className="flex justify-between items-center pt-4 col-start-1 col-end-4">
-            <BaseButton onClick={onBack} size="large" outlined >
-              {t('navigation.back')}
-            </BaseButton>
+          <div className="flex md:flex-row flex-col gap-3 justify-between items-center md:pt-4 col-start-1 col-end-4">
             <BaseIcon
               onClick={() => setShowResetModal(true)}
               icon="restart"
@@ -446,14 +443,19 @@ const Step2 = ({ onNext, onBack }) => {
               className="cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
               tooltip={t('step2.resetModal.button')}
             />
-            <BaseButton
-              type="submit"
-              variant="primary"
-              size="large"
-              disabled={!isValid}
-            >
-              {t('navigation.next')}
-            </BaseButton>
+            <div className="flex flex-row justify-between w-full md:w-auto">
+              <BaseButton onClick={onBack} size="large" outlined>
+                {t('navigation.back')}
+              </BaseButton>
+              <BaseButton
+                type="submit"
+                variant="primary"
+                size="large"
+                disabled={!isValid}
+              >
+                {t('navigation.next')}
+              </BaseButton>
+            </div>
           </div>
         </form>
       </div>

@@ -28,15 +28,15 @@ const VoteInput = ({
   );
 
   return (
-    <div className="border border-gray-400 dark:border-gray-200 rounded-lg p-4 bg-gray-100/50 dark:bg-gray-700/50">
-      <div className="flex items-center gap-4">
-        <div className="shrink-0 w-24">
+    <div className="border border-gray-400 dark:border-gray-200 rounded-lg md:p-4 p-2 bg-gray-100/50 dark:bg-gray-700/50">
+      <div className="flex md:flex-row flex-col items-center gap-4">
+        <div className="shrink-0 md:w-24">
           <span className="font-medium text-darkPrimary dark:text-lightPrimary">
             {t('step3.vote')} {index + 1}
           </span>
         </div>
 
-        <div className="grow relative">
+        <div className="grow relative w-full">
           {vote.person ? (
             <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-lightPrimary rounded-lg">
               <div
@@ -66,7 +66,7 @@ const VoteInput = ({
                 value={searchTerm}
                 onChange={(e) => onSearchChange(index, e.target.value)}
                 placeholder={t('step3.searchPerson')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg dark:text-gray-200! "
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg dark:text-gray-200! dark:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-primary transition"
               />
               {searchTerm && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto ">

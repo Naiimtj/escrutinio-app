@@ -28,11 +28,11 @@ const HomePage = () => {
         </BaseButton>
       </div>
 
-      <div className="flex flex-row gap-8 w-full justify-center">
+      <div className="flex md:flex-row flex-col gap-8 w-full justify-center mb-4">
         {/* Features Grid */}
-        <div className="flex flex-col gap-4 ">
+        <div className="flex flex-col gap-4 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
           {/* Feature 1 */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+          <div className=" flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
               <BaseIcon
                 icon="documentExcel"
@@ -49,7 +49,7 @@ const HomePage = () => {
           </div>
 
           {/* Feature 2 */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
               <BaseIcon
                 icon="settings"
@@ -66,7 +66,7 @@ const HomePage = () => {
           </div>
 
           {/* Feature 3 */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-900/30 rounded-lg flex items-center justify-center mb-4">
               <BaseIcon
                 icon="logs"
@@ -111,13 +111,13 @@ const HomePage = () => {
       <div className="w-full max-w-6xl mx-auto mb-8">
         <BaseExpandableSection
           title={
-            <div className="flex items-center gap-3">
+            <div className="flex md:flex-row flex-col items-center gap-3">
               <BaseIcon
                 icon="alert"
                 size="large"
                 className="fill-yellow-600 dark:fill-yellow-500"
               />
-              <span className="text-yellow-900 dark:text-yellow-200">
+              <span className="text-yellow-900 dark:text-yellow-200 text-lg md:text-xl">
                 {t('home.importantInfo.title')}
               </span>
             </div>

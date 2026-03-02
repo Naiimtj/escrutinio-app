@@ -17,6 +17,7 @@ const BaseDropFile = ({
   labelInvalidFormatMessage1 = 'Remember the file must be in',
   labelInvalidFormatMessage2 = 'format and less than',
   labelMaxFile = 'Max. number of files',
+  messageMaxReached = 'You have reached the maximum number of files.',
   disabled = false,
   onAddFiles,
   onDeleteFile,
@@ -121,7 +122,7 @@ const BaseDropFile = ({
           {...props}
         >
           <div className="flex flex-col gap-2.5 w-full">
-            <div className="flex flex-row items-center gap-4 w-full">
+            <div className="flex md:flex-row flex-col gap-4 items-center md:gap-4 w-full">
               <div className="flex-1">
                 <h2 className="text-lg text-gray-900 dark:text-grayLight font-medium">
                   {label}
@@ -137,7 +138,7 @@ const BaseDropFile = ({
                       icon="pi-exclamation-circle"
                       className="ml-2 text-yellow-600"
                     >
-                      Reached maximum number of files
+                      {messageMaxReached}
                     </BaseIcon>
                   )}
                 </div>
@@ -149,6 +150,7 @@ const BaseDropFile = ({
                   onClick={handleClickBrowse}
                   disabled={uploadIsDisabled}
                   label={buttonLabel}
+                  size="large"
                 />
                 <input
                   type="file"
@@ -165,7 +167,7 @@ const BaseDropFile = ({
 
             {!uploadIsDisabled && (
               <div className="flex flex-col items-center justify-center">
-                <div className="text-gray-400 dark:text-grayMedium w-full flex flex-col gap-2 justify-center items-center border-dashed border-2 py-10">
+                <div className="text-gray-400 dark:text-grayMedium hidden w-full md:flex md:flex-col justify-center items-center border-dashed border-2 py-10 ">
                   <i className="pi pi-file" style={{ fontSize: '1.5rem' }} />
                   <span>{labelDragAndDrop}</span>
                 </div>

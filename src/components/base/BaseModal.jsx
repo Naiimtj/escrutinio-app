@@ -33,7 +33,7 @@ const BaseModal = ({
               className="sticky z-10 right-2 top-2 ml-auto dark:fill-primary fill-textPrimary dark:hover:fill-textPrimary hover:fill-darkPrimary cursor-pointer"
             />
           )}
-          <div className="px-6 pb-6">
+          <div className="md:px-6 px-3 md:pb-6 pb-3">
             {title && (
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
                 {title}

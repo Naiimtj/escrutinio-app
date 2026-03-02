@@ -27,7 +27,7 @@ const DeleteConfirmationModal = ({
 
         {/* Mensaje de advertencia */}
         {warningMessage && (
-          <div className="flex items-center justify-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="flex md:flex-row flex-col items-center justify-center gap-3 md:p-4 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <BaseIcon
               icon="alert"
               size="large"
@@ -38,18 +38,14 @@ const DeleteConfirmationModal = ({
               {warningMessage}
             </p>
           </div>
-        )}           
+        )}
 
         {/* Botones de acción */}
-        <div className="flex justify-center gap-3 pt-2">
+        <div className="flex md:flex-row flex-col justify-center gap-3 pt-2">
           <BaseButton onClick={onCancel} outlined size="large">
             {cancelText || t('modals.cancel')}
           </BaseButton>
-          <BaseButton
-            onClick={onConfirm}
-            variant="danger"
-            size="large"
-          >
+          <BaseButton onClick={onConfirm} variant="danger" size="large">
             {confirmText || t('modals.confirm')}
           </BaseButton>
         </div>

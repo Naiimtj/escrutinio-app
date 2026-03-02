@@ -173,12 +173,12 @@ const Step1 = ({ onNext }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-white">
+    <div className="max-w-4xl mx-auto md:p-6">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-white text-center">
         {t('step1.title')}
       </h1>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md md:p-8 p-4 transition-colors duration-300">
         {uploadSuccess ? (
           <div className="text-center py-8">
             <svg
@@ -251,7 +251,7 @@ const Step1 = ({ onNext }) => {
               </div>
             ) : (
               <>
-                <div className=" flex justify-between items-center p-4 bg-gray-50 border dark:border-grayLight dark:bg-grayMedium rounded-lg">
+                <div className=" flex md:flex-row flex-col gap-2 justify-between items-center md:p-4 p-2 bg-gray-50 border dark:border-grayLight dark:bg-grayMedium rounded-lg">
                   <div>
                     <div className="text-sm text-gray-600 mb-2 font-bold">
                       {t('step1.columns.required')}
@@ -278,6 +278,7 @@ const Step1 = ({ onNext }) => {
                   labelFormat={t('step1.columns.required')}
                   labelLimit={t('step1.fileLimits')}
                   labelMaxFile={t('step1.maxFile')}
+                  messageMaxReached={t('step1.maxFilesReached')}
                   formats={['xlsx', 'xls']}
                   limitNumberFiles={1}
                   limitSizeFile="10"
@@ -292,13 +293,6 @@ const Step1 = ({ onNext }) => {
                     {error}
                   </div>
                 )}
-                
-                <div className="text-center">
-                  <BaseIcon
-                    name="download"
-                    className="w-4 h-4 text-gray-600 dark:text-gray-300"
-                  />
-                </div>
               </>
             )}
           </div>

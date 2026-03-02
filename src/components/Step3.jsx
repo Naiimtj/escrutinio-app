@@ -348,27 +348,27 @@ const Step3 = ({ onNext, onBack }) => {
     [currentBallot],
   );
 
-  if (!config) return <div className="p-6">Cargando...</div>;
+  if (!config) return <div className="p-6">{t('navigation.loading')}...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="max-w-6xl md:mx-auto md:p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center">
           {t('step3.title')}
         </h1>
       </div>
 
-      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-md md:p-8 p-2 py-8 flex flex-col md:items-stretch w-full items-center">
         <BaseIcon
           onClick={() => setShowResetAllBallotsModal(true)}
           icon="restart"
           size="large"
           disabled={ballots.length === 0}
-          className="absolute top-2 right-2 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
+          className="absolute top-0 left-0 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
           tooltip={t('step2.resetModal.button')}
         />
         {hasReachedLimit ? (
-          <div className="text-center py-8">
+          <div className="text-center ">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 {t('step3.noMoreBallots')}
@@ -388,10 +388,7 @@ const Step3 = ({ onNext, onBack }) => {
               </p>
             </div>
             <div className="flex justify-center items-center gap-4">
-              <BaseButton
-                onClick={() => setShowAllBallotsModal(true)}
-                variant="help"
-              >
+              <BaseButton onClick={() => setShowAllBallotsModal(true)} outlined>
                 {t('step3.viewAllBallots')}
               </BaseButton>
             </div>
@@ -412,7 +409,7 @@ const Step3 = ({ onNext, onBack }) => {
         ) : (
           <>
             {/* Ballot Number */}
-            <div className="mb-6 flex justify-between items-center">
+            <div className="mb-6 flex md:flex-row flex-col gap-2 justify-between items-center">
               <h2 className="text-xl font-semibold text-darkPrimary">
                 {t('step3.ballot')} #{currentBallotDisplay}
                 {isEditing && (
@@ -426,15 +423,12 @@ const Step3 = ({ onNext, onBack }) => {
                 {t('step3.ballotsRegistered')}
               </p>
 
-              <BaseButton
-                onClick={() => setShowAllBallotsModal(true)}
-                variant="outline"
-              >
+              <BaseButton onClick={() => setShowAllBallotsModal(true)}>
                 {t('step3.viewAllBallots')}
               </BaseButton>
             </div>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4 mb-6 w-full">
               {currentBallot.map((vote, index) => (
                 <VoteInput
                   key={vote.id}
@@ -450,34 +444,28 @@ const Step3 = ({ onNext, onBack }) => {
               ))}
             </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <div className="flex gap-2">
-                <BaseButton onClick={onBack} variant="secondary">
-                  {t('navigation.back')}
+            <div className="flex md:flex-row gap-4 justify-between items-center pt-4 flex-col-reverse">
+              <BaseButton
+                onClick={() => setShowNullModal(true)}
+                variant="danger"
+                outlined
+                size="large"
+              >
+                {t('step3.nullBallot')}
+              </BaseButton>
+              {ballots.length > 0 && !isEditing && (
+                <BaseButton onClick={editPreviousBallot} outlined>
+                  {t('step3.previousBallot')}
                 </BaseButton>
-                <BaseButton
-                  onClick={() => setShowNullModal(true)}
-                  variant="danger"
-                  outlined
-                >
-                  {t('step3.nullBallot')}
-                </BaseButton>
-              </div>
-
-              <div className="flex gap-2">
-                {ballots.length > 0 && !isEditing && (
-                  <BaseButton onClick={editPreviousBallot} outlined>
-                    {t('step3.previousBallot')}
-                  </BaseButton>
-                )}
-                <BaseButton
-                  onClick={() => setShowConfirmModal(true)}
-                  disabled={!isCurrentBallotComplete}
-                  variant="primary"
-                >
-                  {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
-                </BaseButton>
-              </div>
+              )}
+              <BaseButton
+                onClick={() => setShowConfirmModal(true)}
+                disabled={!isCurrentBallotComplete}
+                variant="primary"
+                size="large"
+              >
+                {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
+              </BaseButton>
             </div>
           </>
         )}
