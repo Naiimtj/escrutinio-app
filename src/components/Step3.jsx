@@ -422,10 +422,16 @@ const Step3 = ({ onNext, onBack }) => {
                 {ballots.length} / {config.total_ballots}{' '}
                 {t('step3.ballotsRegistered')}
               </p>
-
-              <BaseButton onClick={() => setShowAllBallotsModal(true)}>
-                {t('step3.viewAllBallots')}
-              </BaseButton>
+              <div className='flex md:flex-row flex-col gap-4'>
+                {ballots.length > 0 && !isEditing && (
+                  <BaseButton onClick={editPreviousBallot} outlined>
+                    {t('step3.previousBallot')}
+                  </BaseButton>
+                )}
+                <BaseButton onClick={() => setShowAllBallotsModal(true)}>
+                  {t('step3.viewAllBallots')}
+                </BaseButton>
+              </div>
             </div>
 
             <div className="space-y-4 mb-6 w-full">
@@ -453,11 +459,6 @@ const Step3 = ({ onNext, onBack }) => {
               >
                 {t('step3.nullBallot')}
               </BaseButton>
-              {ballots.length > 0 && !isEditing && (
-                <BaseButton onClick={editPreviousBallot} outlined>
-                  {t('step3.previousBallot')}
-                </BaseButton>
-              )}
               <BaseButton
                 onClick={() => setShowConfirmModal(true)}
                 disabled={!isCurrentBallotComplete}

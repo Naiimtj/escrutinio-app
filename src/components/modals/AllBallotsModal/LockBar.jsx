@@ -32,7 +32,7 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
 
   if (showConfirm) {
     return (
-      <div className="flex flex-col gap-2 items-center justify-center p-1 rounded-lg border border-amber-300 dark:border-amber-700">
+      <div className="flex flex-col gap-2 items-center justify-center p-2 rounded-lg border border-amber-300 dark:border-amber-700">
         <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
           <BaseIcon
             icon="alert"
@@ -46,16 +46,16 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
         <p className="text-sm text-amber-700 dark:text-amber-300">
           {t('step3.tiebreakerLock.warningMessage')}
         </p>
-        <div className="flex gap-2 mt-1">
-          <BaseButton size="small" variant="danger" onClick={handleConfirm}>
-            {t('step3.tiebreakerLock.confirmUnlock')}
-          </BaseButton>
+        <div className="flex md:flex-row flex-col gap-2 mt-1 w-full md:w-auto">
           <BaseButton
             size="small"
             variant="secondary"
             onClick={() => setShowConfirm(false)}
           >
             {t('step3.tiebreakerLock.cancelUnlock')}
+          </BaseButton>
+          <BaseButton size="small" variant="danger" onClick={handleConfirm}>
+            {t('step3.tiebreakerLock.confirmUnlock')}
           </BaseButton>
         </div>
       </div>

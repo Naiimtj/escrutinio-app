@@ -264,7 +264,7 @@ const Step1 = ({ onNext }) => {
                     </ul>
                   </div>
                   <>
-                    <BaseButton onClick={handleGenerateDemoFile} size="small">
+                    <BaseButton onClick={handleGenerateDemoFile} size="small" outlined variant='info'>
                       {t('step1.download')}
                     </BaseButton>
                   </>
@@ -310,15 +310,14 @@ const Step1 = ({ onNext }) => {
               </>
             )}
             {hasBackup && (
-              <div className="w-full">
-                <BaseButton
-                  variant="secondary"
-                  icon="restore"
-                  onClick={handleRestoreBackup}
-                >
-                  {t('step1.restore.button')}
-                </BaseButton>
-              </div>
+              <BaseButton
+                variant="secondary"
+                icon="restore"
+                onClick={handleRestoreBackup}
+                className="w-full mt-6"
+              >
+                {t('step1.restore.button')}
+              </BaseButton>
             )}
           </div>
         )}
@@ -346,14 +345,16 @@ const Step1 = ({ onNext }) => {
           confirmText={t('modals.confirm')}
           cancelText={t('modals.cancel')}
         >
-          <>
-            <p className="text-gray-700 dark:text-gray-200">
-              {t('step1.restore.overwriteConfirm')}
-            </p>
-            <p className="text-gray-700 dark:text-gray-200 text-center">
-              {t('step1.restore.overwriteConfirm2')}
-            </p>
-          </>
+          {(ballotsExist() || configurationExists() || voterListExists()) && (
+            <>
+              <p className="text-gray-700 dark:text-gray-200 text-center">
+                {t('step1.restore.overwriteConfirm')}
+              </p>
+              <p className="text-gray-700 dark:text-gray-200 text-center">
+                {t('step1.restore.overwriteConfirm2')}
+              </p>
+            </>
+          )}
         </Confirmation>
 
         <MultipleFilesModal

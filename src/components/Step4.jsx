@@ -290,17 +290,15 @@ const Step4 = () => {
         </BaseButton>
       </div>
       <div className="flex md:flex-row flex-col gap-4 mt-6 justify-center md:justify-between">
-        <BaseButton onClick={() => navigate('/step2')} outlined>
+        <BaseButton onClick={() => navigate('/step2')}  variant="info">
           {t('step4.backToStep2')}
         </BaseButton>
         <BaseButton
           onClick={handleClearData}
           variant="danger"
           icon="delete"
-          tooltip={t('step4.clearDataTooltip')}
-          outlined
           iconSize="small"
-          className="w-full!"
+          className="w-full md:w-auto"
         >
           {t('step4.clearData')}
         </BaseButton>

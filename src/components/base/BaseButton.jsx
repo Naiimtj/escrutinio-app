@@ -18,7 +18,7 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
       success: 'text-darkGreen hover:bg-lightGreen/20',
       warning: 'text-warning hover:bg-warning/20',
       danger: 'text-alert hover:bg-alert/20',
-      info: 'text-darkBlue hover:bg-lightBlue/20',
+      info: 'text-grayDark hover:bg-grayDark/20',
       help: 'text-grayDark hover:bg-grayLight',
     };
     return `bg-transparent ${textVariants[variant] || textVariants.primary}`;
@@ -34,7 +34,7 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
         'border-2 border-lightGreen text-darkGreen hover:bg-lightGreen/20',
       warning: 'border-2 border-warning text-warning hover:bg-warning/20',
       danger: 'border-2 border-alert text-alert hover:bg-alert/20',
-      info: 'border-2 border-lightBlue text-darkBlue hover:bg-lightBlue/20',
+      info: 'border-2 border-grayDark text-grayDark hover:bg-grayDark/20 hover:text-grayLight',
       help: 'border-2 border-grayMedium text-grayDark dark:text-grayMedium hover:bg-grayMedium hover:dark:text-grayDark',
     };
     return `bg-transparent ${outlinedVariants[variant] || outlinedVariants.primary}`;
@@ -48,7 +48,7 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
     success: 'bg-lightGreen text-lightPrimary hover:bg-darkGreen',
     warning: 'bg-warning text-white dark:text-black hover:bg-warning/80',
     danger: 'bg-alert font-bold! text-white hover:bg-alert/80',
-    info: 'bg-lightBlue text-darkPrimary hover:bg-darkPrimary hover:text-lightPrimary',
+    info: 'bg-grayMedium text-grayDark hover:bg-grayDark hover:text-grayLight',
     help: 'bg-grayMedium text-grayDark hover:bg-grayDark hover:text-textPrimary',
   };
   return containedVariants[variant] || containedVariants.primary;
