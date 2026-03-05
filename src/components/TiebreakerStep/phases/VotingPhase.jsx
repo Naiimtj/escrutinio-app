@@ -26,26 +26,8 @@ const VotingPhase = ({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Tie info + restart */}
-      <div className="flex flex-row gap-4 justify-between items-center bg-gray-200/15 dark:bg-gray-100/10 border border-darkPrimary dark:border-white rounded-lg p-4 text-sm text-black dark:text-white">
-        <div>
-          <p className="font-semibold mb-1">
-            {t('step4.tiebreaker.tiedCandidates')}
-          </p>
-          <p className="mb-2">{tiedCandidates.join(' • ')}</p>
-          <p>
-            {t('step4.tiebreaker.winnersNeededInfo', { count: winnersNeeded })}
-          </p>
-        </div>
-        {(rounds.length > 0 || roundBallots.length > 0) && (
-          <BaseButton onClick={onRestart} variant="danger">
-            {t('step4.tiebreaker.restartAll')}
-          </BaseButton>
-        )}
-      </div>
-
       {/* Ballot counter + view buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex md:flex-row flex-col gap-4 md:gap-0 md:items-center justify-between">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           {t('step4.tiebreaker.ballotsEntered', { count: roundBallots.length })}
         </span>
@@ -62,7 +44,6 @@ const VotingPhase = ({
           )}
         </div>
       </div>
-
       {/* Vote inputs */}
       <div className="flex flex-col gap-3">
         {currentBallot.map((vote, i) => (
@@ -81,18 +62,36 @@ const VotingPhase = ({
       </div>
 
       {/* Save ballot */}
-      <div className="flex gap-3 items-center justify-end">
-        <BaseButton
-          onClick={onSaveBallot}
-          variant="primary"
-          disabled={!isBallotFilledEnough}
-        >
-          {t('step4.tiebreaker.saveBallot')}
-        </BaseButton>
+      <BaseButton
+        onClick={onSaveBallot}
+        variant="primary"
+        disabled={!isBallotFilledEnough}
+        className="w-full md:w-auto"
+        size="large"
+      >
+        {t('step4.tiebreaker.saveBallot')}
+      </BaseButton>
+
+      {/* Tie info + restart */}
+      <div className="flex md:flex-row flex-col gap-4 justify-between md:items-center bg-gray-200/15 dark:bg-gray-100/10 border border-darkPrimary dark:border-white rounded-lg md:p-4 p-2 text-sm text-black dark:text-white">
+        <div>
+          <p className="font-semibold mb-1">
+            {t('step4.tiebreaker.tiedCandidates')}
+          </p>
+          <p className="mb-2">{tiedCandidates.join(' • ')}</p>
+          <p>
+            {t('step4.tiebreaker.winnersNeededInfo', { count: winnersNeeded })}
+          </p>
+        </div>
+        {(rounds.length > 0 || roundBallots.length > 0) && (
+          <BaseButton onClick={onRestart} variant="danger">
+            {t('step4.tiebreaker.restartAll')}
+          </BaseButton>
+        )}
       </div>
 
       {/* Navigation */}
-      <div className="flex gap-3 justify-between border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
+      <div className="flex md:flex-row flex-col gap-3 justify-between border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
         <BaseButton outlined onClick={() => navigate('/step4')}>
           {t('step4.tiebreaker.backToStep4')}
         </BaseButton>

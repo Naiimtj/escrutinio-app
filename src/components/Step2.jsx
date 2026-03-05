@@ -11,10 +11,12 @@ import {
   deleteAllBallots,
   ballotsExist,
 } from '../service';
-import { inputStyles } from '../utils/styles';
 import { BaseButton, BaseIcon, BaseModal } from './base';
 import { DeleteConfirmationModal } from './modals';
 import { ELECTION_TYPES } from '../constants/electionTypes';
+
+const inputStyles =
+  'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent';
 
 const FormField = ({
   label,
@@ -36,7 +38,6 @@ const FormField = ({
 }) => {
   const InputComponent = type === 'textarea' ? 'textarea' : 'input';
   const { onChange, ...registerProps } = register(name, validation);
-
   const handleChange = (e) => {
     if (type === 'number' && (min !== undefined || max !== undefined)) {
       let value = e.target.value;

@@ -35,7 +35,7 @@ const BaseModal = ({
           )}
           <div className="md:px-6 px-3 md:pb-6 pb-3">
             {title && (
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white md:mb-6 mb-2 text-center">
                 {title}
               </h2>
             )}

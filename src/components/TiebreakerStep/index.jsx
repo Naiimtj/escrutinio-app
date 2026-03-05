@@ -294,7 +294,7 @@ const TiebreakerStep = () => {
   // RENDER
   // =========================================================================
   return (
-    <div className="max-w-3xl mx-auto md:p-6 flex flex-col gap-6 rounded-2xl bg-warning/15">
+    <div className="max-w-3xl mx-auto md:p-6 p-4 flex flex-col gap-6 rounded-2xl bg-warning/15">
       {/* Header */}
       <div className="flex md:flex-row flex-col items-center justify-between gap-2">
         <div className="flex flex-col gap-1">

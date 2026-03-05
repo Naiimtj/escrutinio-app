@@ -1,10 +1,4 @@
-const Step4ResultsTable = ({
-  t,
-  results,
-  stats,
-  percentage,
-  tiebreakerDelegates,
-}) => {
+const Step4ResultsTable = ({ t, results, stats, tiebreakerDelegates }) => {
   if (results.length === 0) {
     return (
       <p className="text-gray-500 text-center py-8">{t('step4.noResults')}</p>
@@ -53,9 +47,6 @@ const Step4ResultsTable = ({
             </th>
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
               {t('step4.votes')}
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              %
             </th>
           </tr>
         </thead>
@@ -113,9 +104,6 @@ const Step4ResultsTable = ({
                 </td>
                 <td className="px-6 text-center py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {result.votes}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  {percentage(result.votes)}%
                 </td>
               </tr>
             );

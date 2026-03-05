@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getConfiguration,
@@ -10,7 +10,6 @@ import {
 } from '../service';
 import { getPersonFullName } from '../utils/helpers';
 import { generateStep4Pdf } from '../utils/step4Pdf';
-import { buttonStyles } from '../utils/styles';
 import StatCard from './StatCard';
 import { BaseButton, BaseIcon, BaseTextarea } from './base';
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal';
@@ -115,12 +114,6 @@ const Step4 = () => {
     });
   };
 
-  const percentage = useMemo(() => {
-    return stats.validVotes > 0
-      ? (number) => ((number / stats.validVotes) * 100).toFixed(2)
-      : () => '0.00';
-  }, [stats.validVotes]);
-
   const handleClearData = () => {
     setShowClearDataModal(true);
   };
@@ -153,11 +146,13 @@ const Step4 = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center md:text-left">
           {t('step4.title')}
         </h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 md:w-auto w-full">
           <BaseButton
             onClick={generatePDF}
-            className={`${buttonStyles.primary} flex items-center gap-2`}
             icon="download"
+            variant="primary"
+            size="large"
+            className="w-full"
           >
             {t('step4.downloadPDF')}
           </BaseButton>
@@ -216,9 +211,9 @@ const Step4 = () => {
 
       {stats.hasTie && (
         <div
-          className={`bg-yellow-50 dark:bg-yellow-900/20 border-l-4 p-4 mb-6 rounded ${tiebreakerDelegates ? 'border-green-400' : 'border-yellow-400'}`}
+          className={`bg-yellow-50 dark:bg-yellow-900/20 border-2 p-4 mb-6 rounded ${tiebreakerDelegates ? 'border-green-400' : 'border-yellow-400'}`}
         >
-          <div className="flex justify-between items-center">
+          <div className="flex md:flex-row flex-col gap-2 justify-between items-center">
             <div className="shrink-0">
               {tiebreakerDelegates ? (
                 <BaseIcon
@@ -232,16 +227,16 @@ const Step4 = () => {
                 />
               )}
             </div>
-            <div className="ml-3 flex-1">
-              <h3
-                className={`text-sm font-medium ${tiebreakerDelegates ? 'text-green-800 dark:text-green-200' : 'text-yellow-800 dark:text-yellow-200'}`}
+            <div className="md:ml-3 flex-1">
+              <div
+                className={`text-center font-semibold ${tiebreakerDelegates ? 'text-green-800 dark:text-green-200' : 'text-yellow-800 dark:text-yellow-200'}`}
               >
                 {tiebreakerDelegates
                   ? t('step4.tiebreaker.resolvedTitle')
                   : t('step4.tieWarning')}
-              </h3>
+              </div>
               <p
-                className={`mt-2 text-sm ${tiebreakerDelegates ? 'text-green-700 dark:text-green-300' : 'text-yellow-700 dark:text-yellow-300'}`}
+                className={`my-2 text-sm ${tiebreakerDelegates ? 'text-green-700 dark:text-green-300' : 'text-yellow-700 dark:text-yellow-300'}`}
               >
                 {tiebreakerDelegates
                   ? t('step4.tiebreaker.resolvedSubtitle')
@@ -271,7 +266,7 @@ const Step4 = () => {
           placeholder={t('step4.comments.placeholder')}
         />
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md md:p-6 p-4 transition-colors duration-300">
         <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
           {t('step4.results')}
         </h2>
@@ -280,13 +275,22 @@ const Step4 = () => {
           t={t}
           results={results}
           stats={stats}
-          percentage={percentage}
           tiebreakerDelegates={tiebreakerDelegates}
         />
       </div>
-
+      <div className="flex justify-center gap-2 w-full mt-6">
+        <BaseButton
+          onClick={generatePDF}
+          icon="download"
+          variant="primary"
+          size="large"
+          className="w-full md:w-auto"
+        >
+          {t('step4.downloadPDF')}
+        </BaseButton>
+      </div>
       <div className="flex md:flex-row flex-col gap-4 mt-6 justify-center md:justify-between">
-        <BaseButton onClick={() => navigate('/step2')}>
+        <BaseButton onClick={() => navigate('/step2')} outlined>
           {t('step4.backToStep2')}
         </BaseButton>
         <BaseButton
@@ -296,7 +300,7 @@ const Step4 = () => {
           tooltip={t('step4.clearDataTooltip')}
           outlined
           iconSize="small"
-          className='w-full!'
+          className="w-full!"
         >
           {t('step4.clearData')}
         </BaseButton>

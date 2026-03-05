@@ -510,17 +510,17 @@ const Step3 = ({ onNext, onBack }) => {
         title={t('navigation.summary')}
         onConfirm={onNext}
         onCancel={() => setShowFinishModal(false)}
-        confirmStyle="success"
+        confirmStyle="primary"
         confirmText={t('navigation.next')}
       >
         <div className="flex flex-col items-center gap-4">
-          <p className="text-gray-600 dark:text-gray-300 mb-2 text-center font-bold">
+          <p className="text-gray-600 dark:text-gray-300 mb-2 text-center font-bold text-lg">
             {t('step3.totalBallots')}: {ballots.length}
           </p>
-          <p className="text-sm text-darkGreen dark:text-darkGreen">
+          <p className="text-base text-darkGreen dark:text-lightGreen">
             {t('step4.statistics.validBallots')}: {validBallotCount}
           </p>
-          <p className="text-sm text-red-800 dark:text-alert">
+          <p className="text-base text-red-800 dark:text-red-400">
             {t('step4.statistics.nullBallots')}: {nullBallotCount}
           </p>
         </div>

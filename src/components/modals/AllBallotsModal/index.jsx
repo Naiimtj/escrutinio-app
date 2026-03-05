@@ -29,7 +29,7 @@ const AllBallotsModal = ({
       fullWidth={true}
     >
       {!readOnly && (
-        <div className="mb-3 rounded-lg  bg-amber-50 dark:bg-amber-900/20 ">
+        <div className="mb-3 rounded-lg">
           <LockBar
             locked={locked}
             hasTiebreaker={hasTiebreaker}

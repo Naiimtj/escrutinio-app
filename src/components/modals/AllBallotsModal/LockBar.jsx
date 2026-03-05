@@ -22,12 +22,7 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
 
   if (!locked) {
     return (
-      <div className="flex md:flex-row flex-col items-center md:gap-3 justify-center p-1 rounded-lg border border-green-600 dark:border-green-400">
-        <BaseIcon
-          icon="lockOpen"
-          size="small"
-          className="fill-green-600 dark:fill-green-400"
-        />
+      <div className="flex md:flex-row flex-col items-center md:gap-3 justify-center md:p-1">
         <span className="text-sm text-green-700 dark:text-green-400 font-medium text-center">
           {t('step3.tiebreakerLock.unlockedMessage')}
         </span>
@@ -73,7 +68,7 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
       iconPosition="left"
       iconClassName="fill-amber-600 dark:fill-amber-400 group-hover:fill-amber-800 dark:group-hover:fill-amber-200 transition-colors"
       text={true}
-      className="group w-full flex md:flex-row! flex-col! justify-start rounded-lg border border-amber-300 dark:border-amber-700"
+      className="group w-full flex md:flex-row! flex-col! md:justify-start rounded-lg border border-amber-300 dark:border-amber-700"
       variant="warning"
       onClick={handleClickUnlock}
       size="large"
@@ -81,7 +76,7 @@ const LockBar = ({ locked, hasTiebreaker, onUnlockRequest }) => {
       <span className="text-sm text-amber-700 dark:text-amber-300 group-hover:text-amber-900 dark:group-hover:text-amber-200 font-medium transition-colors">
         {t('step3.tiebreakerLock.lockedMessage')}
       </span>
-      <span className="text-xs text-amber-500 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-200 underline ml-auto transition-colors">
+      <span className="text-xs text-amber-500 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-200 underline transition-colors md:ml-auto">
         {t('step3.tiebreakerLock.clickToUnlock')}
       </span>
     </BaseButton>

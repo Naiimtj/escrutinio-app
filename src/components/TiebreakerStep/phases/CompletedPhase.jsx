@@ -15,8 +15,8 @@ const CompletedPhase = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-lg p-5">
-        <h2 className="font-semibold text-green-800 dark:text-green-200 mb-4 flex items-center gap-2 text-lg">
+      <div className="bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-lg md:p-5 p-2">
+        <h2 className="font-semibold text-green-800 dark:text-green-200 md:mb-4 mb-2 flex items-center justify-center gap-2 text-lg">
           <BaseIcon
             icon="check"
             className="h-5 w-5 stroke-green-700 dark:stroke-green-300"
@@ -39,7 +39,7 @@ const CompletedPhase = ({
       </div>
 
       {/* View history actions */}
-      <div className="flex flex-col gap-2 items-end">
+      <div className="flex md:flex-row justify-end flex-col gap-2 items-end">
         {rounds.length > 0 && (
           <BaseButton onClick={onShowRoundsModal} variant="warning" outlined>
             {t('step4.tiebreaker.viewAllRoundsResult')}

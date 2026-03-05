@@ -53,7 +53,7 @@ const ResultsPhase = ({
                     {r.name}
                     {isWinner && (
                       <span className="ml-2 text-xs text-green-700 dark:text-green-400">
-                        ✓ {t('step4.tiebreaker.winner')}
+                        ✓ {t('step4.tiebreaker.elected')}
                       </span>
                     )}
                     {isStillTied && (

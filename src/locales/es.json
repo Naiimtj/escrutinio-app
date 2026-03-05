@@ -240,7 +240,7 @@
     "searchPerson": "Buscar persona...",
     "title": "Paso 3: Registro de papeletas",
     "vote": "Voto",
-    "noMoreBallots": "No hay más papeletas",
+    "noMoreBallots": "No hay papeletas",
     "noMoreBallotsMessage": "En caso de que hubiera más, volver al ",
     "totalBallots": "Papeletas registradas",
     "ballotsRegistered": "papeletas registradas",
@@ -268,7 +268,7 @@
     "tiebreakerLock": {
       "lockedMessage": "Edición bloqueada",
       "clickToUnlock": "Pulsa el candado para desbloquear",
-      "unlockedMessage": "Edición desbloqueada — ten cuidado, cambios activos",
+      "unlockedMessage": "Edición desbloqueada — cambios activos",
       "warningTitle": "¡Atención! Desempate en curso",
       "warningMessage": "Estos cambios afectarán a las votaciones actuales y el desempate puede verse afectado o eliminado.",
       "confirmUnlock": "Desbloquear de todas formas",

@@ -14,7 +14,7 @@ const Confirmation = ({
   const { t } = useTranslation();
 
   return (
-    <BaseModal visible={isOpen} title={title} onClose={onCancel}>
+    <BaseModal visible={isOpen} title={title} onClose={onCancel} fullWidth>
       <div className="mb-6">{children}</div>
       <div className="flex md:flex-row flex-col justify-center gap-2">
         <BaseButton onClick={onCancel} variant="secondary" size="large">

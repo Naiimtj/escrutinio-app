@@ -259,7 +259,7 @@
     "tiebreakerLock": {
       "lockedMessage": "Editing locked",
       "clickToUnlock": "Click the lock to unlock",
-      "unlockedMessage": "Editing unlocked — be careful, changes are live",
+      "unlockedMessage": "Editing unlocked — changes are live",
       "warningTitle": "Warning! Tiebreaker in progress",
       "warningMessage": "These changes will affect the current votes and the tiebreaker may be affected or removed.",
       "confirmUnlock": "Unlock anyway",
