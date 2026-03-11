@@ -5,6 +5,7 @@ const TooltipWrapper = ({
   children,
   tooltip,
   position,
+  absoluteMode = false,
   showDelay = 100,
   hideDelay = 0,
 }) => {
@@ -21,7 +22,10 @@ const TooltipWrapper = ({
 
   const updatePosition = () => {
     if (wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect();
+      const target = absoluteMode
+        ? wrapperRef.current.firstElementChild || wrapperRef.current
+        : wrapperRef.current;
+      const rect = target.getBoundingClientRect();
       setCoords({
         top: rect.top,
         left: rect.left,
@@ -153,6 +157,7 @@ const BaseIcon = ({
   tooltipPosition = 'top',
   tooltipShowDelay = 100,
   tooltipHideDelay = 0,
+  absoluteMode = false,
   ...props
 }) => {
   const IconComponent = iconRegistry[icon];
@@ -192,6 +197,7 @@ const BaseIcon = ({
     <TooltipWrapper
       tooltip={tooltip}
       position={tooltipPosition}
+      absoluteMode={absoluteMode}
       showDelay={tooltipShowDelay}
       hideDelay={tooltipHideDelay}
     >

@@ -444,8 +444,14 @@ const Step2 = ({ onNext, onBack }) => {
               className="cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
               tooltip={t('step2.resetModal.button')}
             />
-            <div className="flex flex-row justify-between w-full md:w-auto">
-              <BaseButton onClick={onBack} size="large" outlined>
+            <div className="flex flex-row gap-3 justify-between w-full md:w-auto">
+              <BaseButton
+                onClick={onBack}
+                size="large"
+                outlined
+                icon="arrowLeft"
+                iconClassName="w-5 h-5"
+              >
                 {t('navigation.back')}
               </BaseButton>
               <BaseButton
@@ -453,6 +459,9 @@ const Step2 = ({ onNext, onBack }) => {
                 variant="primary"
                 size="large"
                 disabled={!isValid}
+                icon="arrowRight"
+                iconClassName="w-5 h-5"
+                iconPosition="right"
               >
                 {t('navigation.next')}
               </BaseButton>

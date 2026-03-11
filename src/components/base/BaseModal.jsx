@@ -22,7 +22,7 @@ const BaseModal = ({
       <div
         className={`bg-gray-50 dark:bg-gray-600 rounded-lg shadow-lg relative overflow-y-auto ${
           fullscreen ? 'w-full h-full' : 'max-w-[90%] max-h-[90%]'
-        } ${fullHeight ? 'h-full max-w-[90%]' : ''} ${fullWidth ? 'w-full max-h-[90%]' : ''}`}
+        } ${fullHeight ? 'h-full max-w-[90%]' : ''} ${fullWidth ? 'w-full md:w-auto max-h-[90%]' : ''}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-gray-50 dark:bg-gray-800">

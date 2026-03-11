@@ -243,15 +243,8 @@ export const BaseButton = ({
   const renderContent = () => (
     <>
       {loading && <LoadingSpinner size={size === 'large' ? 20 : 16} />}
-      {!loading &&
-        icon &&
-        (iconPosition === 'left' || iconPosition === 'top') &&
-        renderIcon()}
+      {!loading && icon && renderIcon()}
       {label || children}
-      {!loading &&
-        icon &&
-        (iconPosition === 'right' || iconPosition === 'bottom') &&
-        renderIcon()}
     </>
   );
 

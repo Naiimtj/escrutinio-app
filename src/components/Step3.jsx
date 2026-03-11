@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useContext } from 'react';
+import { useState, useCallback, useMemo, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getConfiguration,
@@ -60,6 +60,8 @@ const Step3 = ({ onNext, onBack }) => {
   const [searchTerms, setSearchTerms] = useState(
     initialData.initialSearchTerms,
   );
+
+  const voteInputRefs = useRef([]);
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showNullModal, setShowNullModal] = useState(false);
@@ -160,6 +162,13 @@ const Step3 = ({ onNext, onBack }) => {
         newTerms[index] = '';
         return newTerms;
       });
+
+      if (person) {
+        const nextRef = voteInputRefs.current[index + 1];
+        if (nextRef) {
+          setTimeout(() => nextRef.focus(), 50);
+        }
+      }
     },
     [updateVote],
   );
@@ -364,8 +373,9 @@ const Step3 = ({ onNext, onBack }) => {
           icon="restart"
           size="large"
           disabled={ballots.length === 0}
-          className="absolute top-0 left-0 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
+          className="absolute top-1 left-1 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
           tooltip={t('step2.resetModal.button')}
+          absoluteMode
         />
         {hasReachedLimit ? (
           <div className="text-center ">
@@ -397,7 +407,9 @@ const Step3 = ({ onNext, onBack }) => {
               <BaseButton
                 onClick={() => setShowFinishModal(true)}
                 size="large"
-                variant="primary"
+                icon="arrowRight"
+                iconClassName="w-5 h-5"
+                iconPosition="right"
               >
                 {t('navigation.next')}
               </BaseButton>
@@ -422,7 +434,7 @@ const Step3 = ({ onNext, onBack }) => {
                 {ballots.length} / {config.total_ballots}{' '}
                 {t('step3.ballotsRegistered')}
               </p>
-              <div className='flex md:flex-row flex-col gap-4'>
+              <div className="flex md:flex-row flex-col gap-4">
                 {ballots.length > 0 && !isEditing && (
                   <BaseButton onClick={editPreviousBallot} outlined>
                     {t('step3.previousBallot')}
@@ -446,11 +458,20 @@ const Step3 = ({ onNext, onBack }) => {
                   onPersonSelect={handlePersonSelect}
                   onNullVote={handleNullVote}
                   onSearchChange={handleSearchChange}
+                  inputRef={(el) => (voteInputRefs.current[index] = el)}
                 />
               ))}
             </div>
 
             <div className="flex md:flex-row gap-4 justify-between items-center pt-4 flex-col-reverse">
+              <BaseButton
+                onClick={onBack}
+                size="large"
+                icon="arrowLeft"
+                iconClassName="w-5 h-5"
+              >
+                {t('navigation.back')}
+              </BaseButton>
               <BaseButton
                 onClick={() => setShowNullModal(true)}
                 variant="danger"
@@ -464,6 +485,9 @@ const Step3 = ({ onNext, onBack }) => {
                 disabled={!isCurrentBallotComplete}
                 variant="primary"
                 size="large"
+                icon="arrowRight"
+                iconClassName="w-5 h-5"
+                iconPosition="right"
               >
                 {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
               </BaseButton>

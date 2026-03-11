@@ -1,6 +1,8 @@
 import CloseIcon from './CloseIcon';
 import ArrowDownIcon from './ArrowDownIcon';
 import ArrowRightIcon from './ArrowRightIcon';
+import ArrowLeftIcon from './ArrowLeftIcon';
+import ArrowUpIcon from './ArrowUpIcon';
 import CheckIcon from './CheckIcon';
 import AlertIcon from './AlertIcon';
 import InfoIcon from './InfoIcon';
@@ -24,6 +26,8 @@ export const iconRegistry = {
   close: CloseIcon,
   arrowDown: ArrowDownIcon,
   arrowRight: ArrowRightIcon,
+  arrowLeft: ArrowLeftIcon,
+  arrowUp: ArrowUpIcon,
   check: CheckIcon,
   alert: AlertIcon,
   info: InfoIcon,
@@ -48,6 +52,8 @@ export {
   CloseIcon,
   ArrowDownIcon,
   ArrowRightIcon,
+  ArrowLeftIcon,
+  ArrowUpIcon,
   CheckIcon,
   AlertIcon,
   InfoIcon,
