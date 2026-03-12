@@ -14,7 +14,7 @@ const CompletedPhase = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col w-full md:w-auto gap-4 mt-4">
       <div className="bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-lg md:p-5 p-2">
         <h2 className="font-semibold text-green-800 dark:text-green-200 md:mb-4 mb-2 flex items-center justify-center gap-2 text-lg">
           <BaseIcon

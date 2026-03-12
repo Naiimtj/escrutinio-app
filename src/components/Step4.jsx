@@ -142,6 +142,14 @@ const Step4 = () => {
 
   return (
     <div className="max-w-6xl mx-auto md:p-6">
+      <BaseButton
+        onClick={() => navigate('/step2')}
+        outlined
+        icon="arrowLeft"
+        iconClassName="w-5 h-5"
+      >
+        {t('step4.backToStep2')}
+      </BaseButton>
       <div className="flex flex-col gap-4 md:flex-row justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center md:text-left">
           {t('step4.title')}
@@ -289,10 +297,7 @@ const Step4 = () => {
           {t('step4.downloadPDF')}
         </BaseButton>
       </div>
-      <div className="flex md:flex-row flex-col gap-4 mt-6 justify-center md:justify-between">
-        <BaseButton onClick={() => navigate('/step2')}  variant="info">
-          {t('step4.backToStep2')}
-        </BaseButton>
+      <div className="flex md:flex-row flex-col gap-4 mt-6 justify-center md:justify-end">
         <BaseButton
           onClick={handleClearData}
           variant="danger"

@@ -331,25 +331,25 @@
       "startButton": "Tiebreaker voting",
       "viewResultsButton": "View tiebreaker results",
       "pageTitle": "Tiebreaker voting",
-      "pageSubtitle": "Vote exclusively between the tied candidates until the tie is resolved.",
+      "pageSubtitle": "Vote exclusively between the ",
       "modalTitle": "Tiebreaker voting",
       "stepLabel": "Tiebreaker",
       "round": "Round",
-      "restartAll": "Restart tiebreaker",
-      "tiedCandidates": "Tied candidates:",
+      "restartAll": "Restart",
+      "tiedCandidates": "tied candidates.",
       "winnersNeededInfo": "Winners needed: {{count}}",
       "ballotsEntered": "Ballots entered: {{count}}",
       "deleteLastBallot": "Delete last ballot",
       "viewAllBallots": "View all ballots",
       "allBallotsTitle": "Round ballots",
       "saveBallot": "Save ballot",
-      "computeResults": "View results ({{count}} ballots)",
+      "computeResults": "Finish Tiebreak",
       "roundResultsTitle": "Round {{round}} Results",
       "elected": "Elected",
       "stillTied": "Still tied",
       "tieResolved": "The tie has been resolved. Confirm the results.",
       "tieStillExists": "There is still a tie between: {{names}}. Another round is needed to determine {{needed}} delegate(s).",
-      "backToVoting": "Back to voting",
+      "backToVoting": "Reset Round",
       "startNextRound": "Start next round",
       "confirmResult": "Confirm result",
       "resolvedTitle": "Tiebreaker resolved",
@@ -383,5 +383,8 @@
   "language": {
     "spanish": "Español",
     "english": "English"
+  },
+  "common": {
+    "save": "Save Ballot"
   }
 }

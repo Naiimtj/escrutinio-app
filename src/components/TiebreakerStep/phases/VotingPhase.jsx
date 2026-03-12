@@ -1,11 +1,11 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { BaseButton } from '../../base';
+import { Confirmation } from '../../modals';
 import VoteInput from '../../VoteInput';
 
 const VotingPhase = ({
-  tiedCandidates,
-  winnersNeeded,
   rounds,
   roundBallots,
   currentBallot,
@@ -19,15 +19,18 @@ const VotingPhase = ({
   onComputeResults,
   onShowRoundsModal,
   onShowBallotsModal,
-  onRestart,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [showComputeConfirm, setShowComputeConfirm] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col md:gap-4 gap-2">
       {/* Ballot counter + view buttons */}
-      <div className="flex md:flex-row flex-col gap-4 md:gap-0 md:items-center justify-between">
+      <div className="flex md:flex-row flex-col gap-2 md:gap-0 md:items-center justify-between mt-2">
+        <h2 className="text-xl font-semibold text-warning">
+          {t('step3.ballot')} #{roundBallots.length + 1}
+        </h2>
         <span className="text-sm text-gray-600 dark:text-gray-400">
           {t('step4.tiebreaker.ballotsEntered', { count: roundBallots.length })}
         </span>
@@ -38,12 +41,13 @@ const VotingPhase = ({
             </BaseButton>
           )}
           {roundBallots.length > 0 && (
-            <BaseButton onClick={onShowBallotsModal} variant="help">
+            <BaseButton onClick={onShowBallotsModal} variant="help" outlined>
               {t('step3.viewAllBallotsCurrentRound')}
             </BaseButton>
           )}
         </div>
       </div>
+
       {/* Vote inputs */}
       <div className="flex flex-col gap-3">
         {currentBallot.map((vote, i) => (
@@ -61,48 +65,50 @@ const VotingPhase = ({
         ))}
       </div>
 
-      {/* Save ballot */}
-      <BaseButton
-        onClick={onSaveBallot}
-        variant="primary"
-        disabled={!isBallotFilledEnough}
-        className="w-full md:w-auto"
-        size="large"
-      >
-        {t('step4.tiebreaker.saveBallot')}
-      </BaseButton>
-
-      {/* Tie info + restart */}
-      <div className="flex md:flex-row flex-col gap-4 justify-between md:items-center bg-gray-200/15 dark:bg-gray-100/10 border border-darkPrimary dark:border-white rounded-lg md:p-4 p-2 text-sm text-black dark:text-white">
-        <div>
-          <p className="font-semibold mb-1">
-            {t('step4.tiebreaker.tiedCandidates')}
-          </p>
-          <p className="mb-2">{tiedCandidates.join(' • ')}</p>
-          <p>
-            {t('step4.tiebreaker.winnersNeededInfo', { count: winnersNeeded })}
-          </p>
-        </div>
-        {(rounds.length > 0 || roundBallots.length > 0) && (
-          <BaseButton onClick={onRestart} variant="danger">
-            {t('step4.tiebreaker.restartAll')}
-          </BaseButton>
-        )}
-      </div>
-
       {/* Navigation */}
-      <div className="flex md:flex-row flex-col gap-3 justify-between border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
-        <BaseButton outlined onClick={() => navigate('/step4')}>
+      <div className="flex md:flex-row flex-col gap-3 justify-between md:mt-6 mt-4">
+        <BaseButton
+          outlined
+          onClick={() => navigate('/step4')}
+          variant="warning"
+          icon="arrowLeft"
+          iconClassName="w-5 h-5"
+        >
           {t('step4.tiebreaker.backToStep4')}
         </BaseButton>
         {roundBallots.length > 0 && (
-          <BaseButton onClick={onComputeResults} variant="warning" icon="check">
-            {t('step4.tiebreaker.computeResults', {
-              count: roundBallots.length,
-            })}
+          <BaseButton
+            onClick={() => setShowComputeConfirm(true)}
+            variant="warning"
+          >
+            {t('step4.tiebreaker.computeResults')}
           </BaseButton>
         )}
+        {/* Save ballot */}
+        <BaseButton
+          onClick={onSaveBallot}
+          variant="primary"
+          disabled={!isBallotFilledEnough}
+          className="w-full md:w-auto"
+          size="large"
+        >
+          {t('common.save')}
+        </BaseButton>
       </div>
+      <Confirmation
+        isOpen={showComputeConfirm}
+        title={t('step4.tiebreaker.computeResults')}
+        onConfirm={() => {
+          setShowComputeConfirm(false);
+          onComputeResults();
+        }}
+        onCancel={() => setShowComputeConfirm(false)}
+        confirmStyle="warning"
+      >
+        <p className="text-gray-600 dark:text-gray-300">
+          {t('step4.tiebreaker.ballotsEntered', { count: roundBallots.length })}
+        </p>
+      </Confirmation>
     </div>
   );
 };

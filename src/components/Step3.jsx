@@ -489,7 +489,7 @@ const Step3 = ({ onNext, onBack }) => {
                 iconClassName="w-5 h-5"
                 iconPosition="right"
               >
-                {isEditing ? t('step3.confirm') : t('step3.nextBallot')}
+                {isEditing ? t('step3.confirm') : t('common.save')}
               </BaseButton>
             </div>
           </>

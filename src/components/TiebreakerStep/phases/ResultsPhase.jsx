@@ -12,7 +12,7 @@ const ResultsPhase = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+      <h2 className="mt-2 text-lg font-semibold text-gray-800 dark:text-white">
         {t('step4.tiebreaker.roundResultsTitle', { round: currentRoundNumber })}
       </h2>
 
@@ -86,7 +86,7 @@ const ResultsPhase = ({
       )}
 
       <div className="flex gap-3 justify-between">
-        <BaseButton outlined onClick={onBackToVoting}>
+        <BaseButton outlined onClick={onBackToVoting} variant="warning">
           {t('step4.tiebreaker.backToVoting')}
         </BaseButton>
         <BaseButton onClick={onFinishRound} variant="primary">

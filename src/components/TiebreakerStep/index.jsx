@@ -18,6 +18,7 @@ import RoundPills from './RoundPills';
 import CompletedPhase from './phases/CompletedPhase';
 import ResultsPhase from './phases/ResultsPhase';
 import VotingPhase from './phases/VotingPhase';
+import { BaseIcon } from '../base';
 
 const TiebreakerStep = () => {
   const { t } = useTranslation();
@@ -294,122 +295,146 @@ const TiebreakerStep = () => {
   // RENDER
   // =========================================================================
   return (
-    <div className="max-w-3xl mx-auto md:p-6 p-4 flex flex-col gap-6 rounded-2xl bg-warning/15">
+    <div className="max-w-6xl md:mx-auto md:p-6">
       {/* Header */}
-      <div className="flex md:flex-row flex-col items-center justify-between gap-2">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            {t('step4.tiebreaker.pageTitle')}
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {t('step4.tiebreaker.pageSubtitle')}
-          </p>
+      <div className="mb-8 gap-2 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center">
+          {t('step4.tiebreaker.pageTitle')}
+        </h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+          <p>{t('step4.tiebreaker.pageSubtitle')}</p>
+          {tiedCandidates.length > 0 && (
+            <span className="relative group cursor-help w-fit">
+              <span className="font-bold underline text-warning">
+                {t('step4.tiebreaker.tiedCandidates')}
+              </span>
+              <span className="absolute top-full left-0 mt-2 px-3 py-2 text-sm text-white bg-gray-900 dark:bg-gray-300 dark:text-black rounded-md shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 z-50 transition-opacity">
+                {tiedCandidates.map((c) => (
+                  <span key={c} className="block">
+                    {c}
+                  </span>
+                ))}
+              </span>
+            </span>
+          )}
         </div>
       </div>
+      <div className="relative bg-warning/15 dark:bg-warning/15 rounded-lg shadow-md md:p-8 p-2 py-8 flex flex-col md:items-stretch w-full items-center">
+        <div className="flex md:flex-row flex-col items-center justify-between gap-2">
+          {/* Tie restart */}
+          {(tbState.rounds.length > 0 || roundBallots.length > 0) && (
+            <BaseIcon
+              onClick={() => setShowRestartModal(true)}
+              icon="restart"
+              size="large"
+              className="absolute md:top-1 top-0 md:left-1 right-0 cursor-pointer fill-red-500 hover:fill-red-700 dark:fill-red-400 dark:hover:fill-red-200 transition-colors duration-300"
+              tooltip={t('step2.resetModal.button')}
+              absoluteMode
+            />
+          )}
+        </div>
 
-      <RoundPills
-        rounds={tbState.rounds}
-        currentRoundNumber={currentRoundNumber}
-        phase={phase}
-      />
-
-      {phase === 'completed' && tbState.finalDelegates && (
-        <CompletedPhase
-          finalDelegates={tbState.finalDelegates}
+        <RoundPills
           rounds={tbState.rounds}
-          allRoundsBallots={allRoundsBallots}
-          onRestart={() => setShowRestartModal(true)}
-          onShowRoundsModal={() => setShowRoundsModal(true)}
-          onShowBallotsModal={() => {
-            setBallotsModalReadOnly(true);
-            setShowBallotsModal(true);
-          }}
-        />
-      )}
-
-      {phase === 'results' && roundResults && (
-        <ResultsPhase
-          roundResults={roundResults}
           currentRoundNumber={currentRoundNumber}
-          onBackToVoting={() => setShowBackToVotingModal(true)}
-          onFinishRound={handleFinishRound}
+          phase={phase}
         />
-      )}
 
-      {phase === 'voting' && (
-        <VotingPhase
-          tiedCandidates={tiedCandidates}
-          winnersNeeded={winnersNeeded}
+        {phase === 'completed' && tbState.finalDelegates && (
+          <CompletedPhase
+            finalDelegates={tbState.finalDelegates}
+            rounds={tbState.rounds}
+            allRoundsBallots={allRoundsBallots}
+            onRestart={() => setShowRestartModal(true)}
+            onShowRoundsModal={() => setShowRoundsModal(true)}
+            onShowBallotsModal={() => {
+              setBallotsModalReadOnly(true);
+              setShowBallotsModal(true);
+            }}
+          />
+        )}
+
+        {phase === 'results' && roundResults && (
+          <ResultsPhase
+            roundResults={roundResults}
+            currentRoundNumber={currentRoundNumber}
+            onBackToVoting={() => setShowBackToVotingModal(true)}
+            onFinishRound={handleFinishRound}
+          />
+        )}
+
+        {phase === 'voting' && (
+          <VotingPhase
+            rounds={tbState.rounds}
+            roundBallots={roundBallots}
+            currentBallot={currentBallot}
+            searchTerms={searchTerms}
+            tiedVoters={tiedVoters}
+            isBallotFilledEnough={isBallotFilledEnough}
+            onPersonSelect={handlePersonSelect}
+            onNullVote={handleNullVote}
+            onSearchChange={handleSearchChange}
+            onSaveBallot={handleSaveBallot}
+            onComputeResults={handleComputeResults}
+            onShowRoundsModal={() => setShowRoundsModal(true)}
+            onShowBallotsModal={() => {
+              setBallotsModalReadOnly(false);
+              setShowBallotsModal(true);
+            }}
+          />
+        )}
+
+        {/* Modals */}
+        <DeleteConfirmationModal
+          isOpen={showRestartModal}
+          title={t('step4.tiebreaker.restartConfirmTitle')}
+          message={t('step4.tiebreaker.restartConfirmMessage')}
+          onConfirm={handleRestart}
+          onCancel={() => setShowRestartModal(false)}
+          confirmText={t('step4.tiebreaker.restartAll')}
+        />
+
+        <AllBallotsModal
+          visible={showBallotsModal}
+          ballots={ballotsModalReadOnly ? allRoundsBallots : roundBallots}
+          rounds={ballotsModalReadOnly ? tbState.rounds : undefined}
+          onClose={() => setShowBallotsModal(false)}
+          onEdit={handleEditBallot}
+          onDelete={(ballot) => setDeletingBallot(ballot)}
+          title={t('step4.tiebreaker.allBallotsTitle')}
+          readOnly={ballotsModalReadOnly}
+        />
+
+        <RoundsResultsModal
+          visible={showRoundsModal}
           rounds={tbState.rounds}
-          roundBallots={roundBallots}
-          currentBallot={currentBallot}
-          searchTerms={searchTerms}
-          tiedVoters={tiedVoters}
-          isBallotFilledEnough={isBallotFilledEnough}
-          onPersonSelect={handlePersonSelect}
-          onNullVote={handleNullVote}
-          onSearchChange={handleSearchChange}
-          onSaveBallot={handleSaveBallot}
-          onComputeResults={handleComputeResults}
-          onShowRoundsModal={() => setShowRoundsModal(true)}
-          onShowBallotsModal={() => {
-            setBallotsModalReadOnly(false);
-            setShowBallotsModal(true);
-          }}
-          onRestart={() => setShowRestartModal(true)}
+          onClose={() => setShowRoundsModal(false)}
+          title={t('step4.tiebreaker.allRoundsTitle')}
         />
-      )}
 
-      {/* Modals */}
-      <DeleteConfirmationModal
-        isOpen={showRestartModal}
-        title={t('step4.tiebreaker.restartConfirmTitle')}
-        message={t('step4.tiebreaker.restartConfirmMessage')}
-        onConfirm={handleRestart}
-        onCancel={() => setShowRestartModal(false)}
-        confirmText={t('step4.tiebreaker.restartAll')}
-      />
+        <DeleteConfirmationModal
+          isOpen={showBackToVotingModal}
+          title={t('step4.tiebreaker.backToVotingConfirmTitle')}
+          message={t('step4.tiebreaker.backToVotingConfirmMessage')}
+          onConfirm={handleConfirmBackToVoting}
+          onCancel={() => setShowBackToVotingModal(false)}
+          confirmText={t('step4.tiebreaker.backToVotingConfirm')}
+        />
 
-      <AllBallotsModal
-        visible={showBallotsModal}
-        ballots={ballotsModalReadOnly ? allRoundsBallots : roundBallots}
-        rounds={ballotsModalReadOnly ? tbState.rounds : undefined}
-        onClose={() => setShowBallotsModal(false)}
-        onEdit={handleEditBallot}
-        onDelete={(ballot) => setDeletingBallot(ballot)}
-        title={t('step4.tiebreaker.allBallotsTitle')}
-        readOnly={ballotsModalReadOnly}
-      />
-
-      <RoundsResultsModal
-        visible={showRoundsModal}
-        rounds={tbState.rounds}
-        onClose={() => setShowRoundsModal(false)}
-        title={t('step4.tiebreaker.allRoundsTitle')}
-      />
-
-      <DeleteConfirmationModal
-        isOpen={showBackToVotingModal}
-        title={t('step4.tiebreaker.backToVotingConfirmTitle')}
-        message={t('step4.tiebreaker.backToVotingConfirmMessage')}
-        onConfirm={handleConfirmBackToVoting}
-        onCancel={() => setShowBackToVotingModal(false)}
-        confirmText={t('step4.tiebreaker.backToVotingConfirm')}
-      />
-
-      <DeleteConfirmationModal
-        isOpen={!!deletingBallot}
-        title={t('step4.tiebreaker.deleteBallotTitle')}
-        message={
-          deletingBallot &&
-          t('step4.tiebreaker.deleteBallotMessage', {
-            number: deletingBallot.number,
-          })
-        }
-        onConfirm={handleConfirmDeleteBallot}
-        onCancel={() => setDeletingBallot(null)}
-        confirmText={t('step4.tiebreaker.deleteBallotConfirm')}
-      />
+        <DeleteConfirmationModal
+          isOpen={!!deletingBallot}
+          title={t('step4.tiebreaker.deleteBallotTitle')}
+          message={
+            deletingBallot &&
+            t('step4.tiebreaker.deleteBallotMessage', {
+              number: deletingBallot.number,
+            })
+          }
+          onConfirm={handleConfirmDeleteBallot}
+          onCancel={() => setDeletingBallot(null)}
+          confirmText={t('step4.tiebreaker.deleteBallotConfirm')}
+        />
+      </div>
     </div>
   );
 };

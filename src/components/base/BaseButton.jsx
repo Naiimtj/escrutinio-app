@@ -13,7 +13,8 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
 
   if (text) {
     const textVariants = {
-      primary: 'text-textPrimary hover:bg-lightPrimary/50',
+      primary:
+        'text-extraDarkPrimary dark:text-textPrimary hover:bg-lightPrimary/50',
       secondary: 'text-darkPrimary hover:bg-grayLight',
       success: 'text-darkGreen hover:bg-lightGreen/20',
       warning: 'text-warning hover:bg-warning/20',
@@ -27,7 +28,7 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
   if (outlined) {
     const outlinedVariants = {
       primary:
-        'border-2 border-primary text-textPrimary hover:bg-lightPrimary hover:text-extraDarkPrimary',
+        'border-2 border-darkPrimary dark:border-primary text-extraDarkPrimary dark:text-textPrimary hover:bg-lightPrimary dark:hover:text-extraDarkPrimary',
       secondary:
         'border-2 border-grayMedium text-darkPrimary hover:bg-grayLight',
       success:
@@ -35,7 +36,7 @@ const getVariantClasses = (variant, outlined, text, disabled) => {
       warning: 'border-2 border-warning text-warning hover:bg-warning/20',
       danger: 'border-2 border-alert text-alert hover:bg-alert/20',
       info: 'border-2 border-grayDark text-grayDark hover:bg-grayDark/20 hover:text-grayLight',
-      help: 'border-2 border-grayMedium text-grayDark dark:text-grayMedium hover:bg-grayMedium hover:dark:text-grayDark',
+      help: 'border-2 dark:border-grayMedium border-grayDark text-grayDark dark:text-grayMedium hover:bg-grayMedium hover:dark:text-grayDark',
     };
     return `bg-transparent ${outlinedVariants[variant] || outlinedVariants.primary}`;
   }
